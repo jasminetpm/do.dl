@@ -1,0 +1,11 @@
+1. Send information by having their JPanel paint the same sequence of coordinates in the same colour. So we just need to send 5 tokens: Colour, x1, y1, x2, y2.
+
+2. Store actions in a list of paths (paths defined by everything between the start and end of a mouse click). We can then implement an undo feature by repainting entire JPanel until one path before. Can implement lock on frames as well to prevent conflicts (can implement if testing reveals that conflicts happen often).
+
+3. One general server, which has 2 threads running that are connected to two separate ports per client.
+
+4. Can erase by tracking each pixel and setting transparency to zero whenever eraser tool used.
+
+5. It would be cool to automatically turn imported images into low res - kind of like gameboy style pixel art.
+
+6. Start thinking about application protocol and constraints.
