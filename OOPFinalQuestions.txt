@@ -1,3 +1,4 @@
+Answers to questions for final project:
 1. Send information by having their JPanel paint the same sequence of coordinates in the same colour. So we just need to send 5 tokens: Colour, x1, y1, x2, y2.
 
 2. Store actions in a list of paths (paths defined by everything between the start and end of a mouse click). We can then implement an undo feature by repainting entire JPanel until one path before. Can implement lock on frames as well to prevent conflicts (can implement if testing reveals that conflicts happen often).
@@ -9,3 +10,19 @@
 5. It would be cool to automatically turn imported images into low res - kind of like gameboy style pixel art.
 
 6. Start thinking about application protocol and constraints.
+
+Prototype goals:
+1. Drawing panel (700x540px)
+   - Toolbar
+   - Painting window
+   - Comments section (to be implemented after Project Presentation)
+2. Message panel (260x540px)
+   - Chat box
+   - Title of project
+
+Things to note:
+1. Make sure dimensions are the same (Do.dl window size: 960x540px)
+
+Final Plans for implementation
+1. Servers: Chat server, Paint server
+2. Comments to be on a top layer unaccessible by drawing toolbox
