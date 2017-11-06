@@ -20,8 +20,8 @@ public class ColorPickerListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) 
 	{
 		this.myWindow.setColor(JColorChooser.showDialog(null, 
-				               "Pick your colour", 
-				               this.myWindow.getColor()));
+	               			"Pick your colour", 
+	               			this.myWindow.getColor()));
 		this.myWindow.setColorChooserIcon();
 	}
 }

@@ -14,14 +14,15 @@ import java.util.ArrayList;
 
 import gui.PaintWindow;
 import model.BrushInstruction;
+import model.EraserInstruction;
 
-public class BrushMouseListener implements MouseListener, MouseMotionListener {
+public class PanelMouseListener implements MouseListener, MouseMotionListener {
 
 	private PaintWindow myWindow;
 	private ArrayList<Point> points;
 	private Color windowColor;
 	
-	public BrushMouseListener (PaintWindow pw)
+	public PanelMouseListener (PaintWindow pw)
 	{
 		this.myWindow = pw;
 		this.points = new ArrayList<Point>();
@@ -30,8 +31,6 @@ public class BrushMouseListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		this.points.add(new Point(e.getX(),e.getY()));
-//		myWindow.getJPanel().addPoint(e.getX(), e.getY(), myWindow.getColor());
-//		myWindow.getJPanel().repaint();
 	}
 
 	@Override
@@ -41,7 +40,6 @@ public class BrushMouseListener implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
 		this.windowColor = this.myWindow.getColor();
 	}
 
@@ -53,11 +51,24 @@ public class BrushMouseListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		BrushInstruction instr = new BrushInstruction(this.myWindow.getColor(), this.myWindow.getStrokeSize(), 0, this.points);
-		this.myWindow.sendInstruction(instr);
-		System.out.println("SENT INSTR:");
-		System.out.println(instr);
-		this.points.clear();
+		switch (this.myWindow.getToolType()) {
+			case 0:
+				BrushInstruction brushInstr = new BrushInstruction(this.myWindow.getColor(), this.myWindow.getStrokeSize(), this.myWindow.getCurrentLayer(), this.points);
+				this.myWindow.sendInstruction(brushInstr);
+				System.out.println("SENT INSTR:");
+				System.out.println(brushInstr);
+				this.points.clear();
+				break;
+			case 1:
+				EraserInstruction eraserInstr = new EraserInstruction(this.myWindow.getStrokeSize(), this.myWindow.getCurrentLayer(), this.points);
+				this.myWindow.sendInstruction(eraserInstr);
+				System.out.println("SENT INSTR:");
+				System.out.println(eraserInstr);
+				this.points.clear();
+				break;
+			default:
+		}
+			
 	}
 
 	@Override

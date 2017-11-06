@@ -25,6 +25,8 @@ import javax.swing.SpinnerNumberModel;
 
 
 import listeners.ColorPickerListener;
+import listeners.LayerSelectorListener;
+import listeners.ToolSelectorListener;
 import model.Instruction;
 
 public class PaintWindow extends JFrame {
@@ -39,6 +41,8 @@ public class PaintWindow extends JFrame {
 			                                                         1); //step
 	private JSpinner strokeSizeSelector;
 	private int strokeSize = 5;
+	private int toolType = 0;
+	private int currentLayer = 0;
 	private JButton colorPicker;
 	private Color currentColor = Color.RED;
 	//Icons
@@ -85,6 +89,12 @@ public class PaintWindow extends JFrame {
 		for (int i = 0; i < toolbarButtons.length; i++)
 		{
 			toolbarButtons[i] = new JButton(TOOL_LIST[i]);
+			if (i == 0 || i == 1) {
+				toolbarButtons[i].addActionListener(new ToolSelectorListener(i, this));
+			}
+			if (i == 2 || i == 3) {
+				toolbarButtons[i].addActionListener(new LayerSelectorListener((i-2), this));
+			}
 			this.toolbar.add(toolbarButtons[i]);
 		}
 		this.strokeSizeSelector = new JSpinner(this.strokeValues);
@@ -122,6 +132,22 @@ public class PaintWindow extends JFrame {
 	
 	public void sendInstruction(Instruction instr) {
 		this.paintClient.sendInstruction(instr);
+	}
+	
+	public void setToolType(int type) {
+		this.toolType = type;
+	}
+	
+	public int getToolType() {
+		return this.toolType;
+	}
+	
+	public void setCurrentLayer(int layer) {
+		this.currentLayer = layer;
+	}
+	
+	public int getCurrentLayer() {
+		return this.currentLayer;
 	}
 	
 	// I declare the PaintClient class here to provide easy access to the parent fields

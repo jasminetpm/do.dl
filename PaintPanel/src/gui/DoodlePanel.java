@@ -4,38 +4,46 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import listeners.BrushMouseListener;
+import listeners.PanelMouseListener;
 import model.Instruction;
 
 public class DoodlePanel extends JPanel {
 	
 	private PaintWindow myWindow;
-	private BrushMouseListener bml;
-	private BufferedImage img;
+	private PanelMouseListener pml;
+	private ArrayList<BufferedImage> layers;
 	
 	public DoodlePanel(PaintWindow pw)
 	{
 		this.myWindow = pw;
-		this.bml = new BrushMouseListener(this.myWindow);
-		this.img = new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB);
+		this.pml = new PanelMouseListener(this.myWindow);
+		
+		// add 3 layers
+		this.layers = new ArrayList<BufferedImage>();
+		for (int i = 0; i < 3; i++) {
+			BufferedImage img = new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB);
+			this.layers.add(img);
+		}
 		
 		this.setBackground(Color.WHITE);
-		this.addMouseListener(bml);
-		this.addMouseMotionListener(bml);
+		this.addMouseListener(pml);
+		this.addMouseMotionListener(pml);
 	}
 	
 	public void executeInstruction(Instruction instr) {
-		Graphics2D g = this.img.createGraphics();
-		instr.execute(g);
+		instr.execute(layers);
 		this.repaint();
 	}
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		g.drawImage(this.img, 0, 0, null);
+		for (BufferedImage img : this.layers) {
+			g.drawImage(img, 0, 0, null);
+		}
 	}
 
 }
