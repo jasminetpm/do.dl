@@ -11,7 +11,7 @@ import model.Instruction;
 
 public class PaintServer {
 	private ServerSocket servSock;
-	private static int clientCount = 0;
+	private static int clientId = 0;
 	private static ArrayList<ConnectionHandler> clientList = new ArrayList<ConnectionHandler>();
 	
 	public PaintServer(int port) {
@@ -28,9 +28,9 @@ public class PaintServer {
 			Socket c;
 			try {
 				c = this.servSock.accept();
-				ConnectionHandler th = new ConnectionHandler(c, PaintServer.clientCount);
+				ConnectionHandler th = new ConnectionHandler(c, PaintServer.clientId);
 				PaintServer.clientList.add(th);
-				PaintServer.clientCount++;
+				PaintServer.clientId++;
 				th.start();
 				System.out.println("Just accepted a client. Going to the next iteration");
 			} catch (IOException e) {
@@ -41,7 +41,7 @@ public class PaintServer {
 	
 	class ConnectionHandler extends Thread {
 		private Socket client;
-		int id;
+		public int id;
 		private OutputStream os;
 		private InputStream is;
 		private ObjectOutputStream oos;
@@ -55,6 +55,7 @@ public class PaintServer {
 				this.os = this.client.getOutputStream();
  				this.is = this.client.getInputStream();
  				this.oos = new ObjectOutputStream(this.os);
+ 				this.sendId(this.id);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -67,16 +68,17 @@ public class PaintServer {
 				this.ois = new ObjectInputStream(this.is);
 				while(true) {
 					Instruction instr = (Instruction) this.ois.readObject();
-					System.out.println("Executing instruction:");
+					System.out.println("Got message from client #" + instr.getClientId());
 					System.out.println(instr);
 					for (ConnectionHandler connection : PaintServer.clientList) {
-						connection.sendInstruction(instr);
+						if (connection.id != instr.getClientId()) {
+							connection.sendInstruction(instr);
+						}
 					}
 				} 
 			} catch (ClassNotFoundException | IOException e) {
 				System.out.println("Client disconnected!");
-				PaintServer.clientList.remove(this.id);
-				PaintServer.clientCount--;
+				PaintServer.clientList.remove(this);
 				System.out.println(PaintServer.clientList);
 			}
 		}
@@ -85,6 +87,18 @@ public class PaintServer {
 			try {
 				System.out.println("Sending Message to Client");
 				this.oos.writeObject(instr);
+				this.oos.flush();
+				this.oos.reset();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		public void sendId(Integer id) {
+			try {
+				System.out.println("Issuing client ID...");
+				this.oos.writeObject(new Integer(this.id));
 				this.oos.flush();
 				this.oos.reset();
 			} catch (IOException e) {

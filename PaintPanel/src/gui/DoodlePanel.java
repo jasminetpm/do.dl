@@ -34,6 +34,10 @@ public class DoodlePanel extends JPanel {
 		this.addMouseMotionListener(pml);
 	}
 	
+	public ArrayList<BufferedImage> getLayers() {
+		return this.layers;
+	}
+	
 	public void executeInstruction(Instruction instr) {
 		instr.execute(layers);
 		this.repaint();

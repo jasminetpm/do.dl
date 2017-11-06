@@ -57,6 +57,7 @@ public class PaintWindow extends JFrame {
 	//Listeners
 	private ColorPickerListener colorListener;
 	private PaintClient paintClient;
+	private static int clientId;
 	
 	public PaintWindow(String ip, int port) throws UnknownHostException, IOException
 	{
@@ -134,6 +135,10 @@ public class PaintWindow extends JFrame {
 		this.paintClient.sendInstruction(instr);
 	}
 	
+	public DoodlePanel getDoodlePanel() {
+		return PaintWindow.paintPanel;
+	}
+	
 	public void setToolType(int type) {
 		this.toolType = type;
 	}
@@ -148,6 +153,14 @@ public class PaintWindow extends JFrame {
 	
 	public int getCurrentLayer() {
 		return this.currentLayer;
+	}
+	
+	public void setClientId(int id) {
+		this.clientId = id;
+	}
+	
+	public int getClientId() {
+		return this.clientId;
 	}
 	
 	// I declare the PaintClient class here to provide easy access to the parent fields
@@ -182,12 +195,18 @@ public class PaintWindow extends JFrame {
 		public void run() 
 		{
 			// listen for incoming messages
-			Instruction instr;
+			Object message;
 			try {
 				this.ois = new ObjectInputStream(this.is);
-				while ((instr = (Instruction) this.ois.readObject()) != null) {
-					System.out.println("Received instruction:");
-					PaintWindow.paintPanel.executeInstruction(instr);
+				while ((message = this.ois.readObject()) != null) {
+					if (message instanceof Integer) {
+						System.out.println("Got ID: " + message);
+						PaintWindow.clientId = ((Integer) message).intValue();
+					} else {
+						Instruction instr = (Instruction) message;
+						System.out.println("Received instruction:");
+						PaintWindow.paintPanel.executeInstruction(instr);							
+					}
 				}
 			} catch (ClassNotFoundException | IOException e) {
 				// TODO Auto-generated catch block
