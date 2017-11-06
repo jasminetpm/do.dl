@@ -4,6 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -18,10 +25,11 @@ import javax.swing.SpinnerNumberModel;
 
 
 import listeners.ColorPickerListener;
+import model.Instruction;
 
 public class PaintWindow extends JFrame {
 	
-	private DoodlePanel paintPanel;
+	private static DoodlePanel paintPanel;
 	private JPanel toolbar;
 	private JButton[] toolbarButtons = new JButton[7];
 	private Dimension WINDOW_SIZE = new Dimension(700, 540);
@@ -30,7 +38,7 @@ public class PaintWindow extends JFrame {
 			                                                         10, //max
 			                                                         1); //step
 	private JSpinner strokeSizeSelector;
-	private int strokeSize;
+	private int strokeSize = 5;
 	private JButton colorPicker;
 	private Color currentColor = Color.RED;
 	//Icons
@@ -44,16 +52,21 @@ public class PaintWindow extends JFrame {
 	private final Icon[] TOOL_LIST = { brush, text, eraser, comment, undo, upload, download };
 	//Listeners
 	private ColorPickerListener colorListener;
+	private PaintClient paintClient;
 	
-	public PaintWindow()
+	public PaintWindow(String ip, int port) throws UnknownHostException, IOException
 	{
+		// Creating connection to server
+		this.paintClient = new PaintClient(ip, port);
+		this.paintClient.start();
+		
 		// Instantiating listeners
 		this.colorListener = new ColorPickerListener(this);
 		// Instantiating and adding JPanels
 		this.setLayout(new BorderLayout());
 		this.toolbar = new JPanel();		
-		this.paintPanel = new DoodlePanel(this);
-		this.add(this.paintPanel, BorderLayout.CENTER);
+		PaintWindow.paintPanel = new DoodlePanel(this);
+		this.add(PaintWindow.paintPanel, BorderLayout.CENTER);
 		this.populateToolbar();
 		this.add(this.toolbar, BorderLayout.LINE_START);
 		// Fixing window dimensions
@@ -107,9 +120,59 @@ public class PaintWindow extends JFrame {
 		this.colorPicker.setBackground(this.currentColor);
 	}
 	
-	public static void main (String args[])
+	public void sendInstruction(Instruction instr) {
+		this.paintClient.sendInstruction(instr);
+	}
+	
+	// I declare the PaintClient class here to provide easy access to the parent fields
+	class PaintClient extends Thread {
+		private Socket mySocket;
+		private OutputStream os;
+		private ObjectOutputStream oos;
+		private InputStream is;
+		private ObjectInputStream ois;
+
+		public PaintClient(String ip, int port) throws UnknownHostException, IOException 
+		{
+			this.mySocket = new Socket(ip, port);
+			this.os = this.mySocket.getOutputStream();
+			this.oos = new ObjectOutputStream(this.os);
+			this.is = this.mySocket.getInputStream();
+		}
+		
+		public void sendInstruction(Instruction instr) 
+		{
+			try {
+				this.oos.writeObject(instr);
+				this.oos.flush();
+				this.oos.reset();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		@Override
+		public void run() 
+		{
+			// listen for incoming messages
+			Instruction instr;
+			try {
+				this.ois = new ObjectInputStream(this.is);
+				while ((instr = (Instruction) this.ois.readObject()) != null) {
+					System.out.println("Received instruction:");
+					PaintWindow.paintPanel.executeInstruction(instr);
+				}
+			} catch (ClassNotFoundException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void main (String args[]) throws UnknownHostException, IOException
 	{
-		PaintWindow pw = new PaintWindow();
+		PaintWindow pw = new PaintWindow("127.0.0.1", 9876);
 	}
 
 }
