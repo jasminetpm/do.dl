@@ -11,6 +11,7 @@ import model.Instruction;
 
 public class PaintServer {
 	private ServerSocket servSock;
+	private static int clientCount = 0;
 	private static ArrayList<ConnectionHandler> clientList = new ArrayList<ConnectionHandler>();
 	
 	public PaintServer(int port) {
@@ -27,8 +28,9 @@ public class PaintServer {
 			Socket c;
 			try {
 				c = this.servSock.accept();
-				ConnectionHandler th = new ConnectionHandler(c);
-				clientList.add(th);
+				ConnectionHandler th = new ConnectionHandler(c, PaintServer.clientCount);
+				PaintServer.clientList.add(th);
+				PaintServer.clientCount++;
 				th.start();
 				System.out.println("Just accepted a client. Going to the next iteration");
 			} catch (IOException e) {
@@ -39,15 +41,17 @@ public class PaintServer {
 	
 	class ConnectionHandler extends Thread {
 		private Socket client;
+		int id;
 		private OutputStream os;
 		private InputStream is;
 		private ObjectOutputStream oos;
 		private ObjectInputStream ois;
 		
-		public ConnectionHandler(Socket c) {
+		public ConnectionHandler(Socket c, int _id) {
 			// TODO Auto-generated constructor stub
 			try {
 				this.client = c;
+				this.id = _id;
 				this.os = this.client.getOutputStream();
  				this.is = this.client.getInputStream();
  				this.oos = new ObjectOutputStream(this.os);
@@ -70,8 +74,10 @@ public class PaintServer {
 					}
 				} 
 			} catch (ClassNotFoundException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("Client disconnected!");
+				PaintServer.clientList.remove(this.id);
+				PaintServer.clientCount--;
+				System.out.println(PaintServer.clientList);
 			}
 		}
 		
