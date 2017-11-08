@@ -4,7 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -20,6 +23,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.AbstractSpinnerModel;
@@ -41,7 +45,6 @@ public class PaintWindow extends JFrame {
 	private JPanel toolbar;
 	private JColorChooser jcc;
 	private JDialog colorDialog;
-	private JFrame colorFrame;
 	// Tool buttons
 	private JButton[] toolbarButtons = new JButton[7];
 	private JButton colorButton;
@@ -69,8 +72,13 @@ public class PaintWindow extends JFrame {
 	private Icon upload = new ImageIcon("imagesource/ic_file_upload_black_24dp_1x.png");
 	private Icon download = new ImageIcon("imagesource/ic_file_download_black_24dp_1x.png");
 	private final Icon[] TOOL_LIST = { brush, eraser, text, comment, undo, upload, download };
-	// Spinner icons
-	private Icon layer = new ImageIcon("imagesource/ic_layers_black_24dp_1x.png");
+	// Component icons
+	private Icon layerIcon = new ImageIcon("imagesource/ic_layers_black_24dp_1x.png");
+	private Icon strokeSizeIcon = new ImageIcon("imagesource/ic_line_weight_black_24dp_1x.png");
+	private Icon colorIcon = new ImageIcon("imagesource/ic_color_lens_black_24dp_1x.png");
+	private JLabel layerLabel = new JLabel(layerIcon);
+	private JLabel strokeSizeLabel = new JLabel(strokeSizeIcon);
+	private JLabel colorLabel = new JLabel(colorIcon);
 	// Listeners
 	private ColorPickerListener colorListener;
 	
@@ -115,18 +123,27 @@ public class PaintWindow extends JFrame {
 			this.toolbar.add(toolbarButtons[i]);
 		}
 		// Setting layer selector
+		JPanel layerToolSection = new JPanel(new BorderLayout());
 		this.layerSelector = new JSpinner(this.layerValues);
 		this.layerSelector.addChangeListener(new LayerSelectorListener(this));
-		this.toolbar.add(this.layerSelector);
+		layerToolSection.add(this.layerSelector, BorderLayout.CENTER);
+		layerToolSection.add(this.layerLabel, BorderLayout.LINE_START);
+		this.toolbar.add(layerToolSection);
 		// Setting stroke size selector
+		JPanel strokeSizeSection = new JPanel(new BorderLayout());
 		this.strokeSizeSelector = new JSpinner(this.strokeValues);
 		this.strokeSizeSelector.addChangeListener(new StrokeSizeListener(this));
-		this.toolbar.add(this.strokeSizeSelector);
+		strokeSizeSection.add(this.strokeSizeSelector, BorderLayout.CENTER);
+		strokeSizeSection.add(this.strokeSizeLabel, BorderLayout.LINE_START);
+		this.toolbar.add(strokeSizeSection);
 		// Setting color chooser
+		JPanel colorSection = new JPanel(new BorderLayout());
 		this.colorButton = new JButton();
 		this.setColorChooserIcon();
 		this.colorButton.addActionListener(this.colorListener);
-		this.toolbar.add(this.colorButton);
+		colorSection.add(this.colorButton, BorderLayout.CENTER);
+		colorSection.add(this.colorLabel, BorderLayout.LINE_START);
+		this.toolbar.add(colorSection);
 	}
 	
 	private void createColorChooser()
@@ -142,12 +159,13 @@ public class PaintWindow extends JFrame {
 			} 
 		}
 		this.colorDialog = JColorChooser.createDialog(this, 
-                "Pick your colour", 
-                true, 
-                this.jcc, 
-                new ColorOKListener(this, this.jcc), 
-                new ColorCancelListener(this));
+                                                      "Pick your colour", 
+                                                      true, 
+                                                      this.jcc, 
+                                                      new ColorOKListener(this, this.jcc), 
+                                                      new ColorCancelListener(this));
 	}
+	
 	public void viewColorChooser()
 	{
 		this.colorDialog.setVisible(true);
@@ -175,8 +193,13 @@ public class PaintWindow extends JFrame {
 	
 	public void setColorChooserIcon()
 	{
-		this.colorButton.setOpaque(true);
-		this.colorButton.setBackground(this.currentColor);
+		BufferedImage colorBox = new BufferedImage(25, // Dimensions hard coded
+											  	  25,
+											  	  BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = colorBox.createGraphics();
+		g.setColor(this.currentColor);
+		g.fillRect(0, 0, 25, 25);
+		this.colorButton.setIcon(new ImageIcon(colorBox));
 	}
 	
 	public void sendInstruction(Instruction instr) {
@@ -265,7 +288,7 @@ public class PaintWindow extends JFrame {
 	
 	public static void main (String args[]) throws UnknownHostException, IOException
 	{
-		PaintWindow pw = new PaintWindow("127.0.0.1", 9872);
+		PaintWindow pw = new PaintWindow("127.0.0.1", 9876);
 	}
 
 }

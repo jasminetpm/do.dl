@@ -16,7 +16,6 @@ public class ToolSelectorListener implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		System.out.println("Switched to type: " + this.toolId);
 		this.pw.setToolType(this.toolId);
 	}
