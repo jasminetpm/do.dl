@@ -2,6 +2,7 @@ package listeners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.JTextArea;
 
@@ -25,7 +26,12 @@ public class SendButtonListener implements ActionListener{
 		// TODO Auto-generated method stub
 		String message = this.jta.getText();
 		System.out.println(message);
-		new SendString(this.mw, message);
+		try {
+			new SendString(this.mw, message);
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		this.jta.setText(null);
 		this.jta.repaint();
 		this.mw.getSTP().textAdded(message);

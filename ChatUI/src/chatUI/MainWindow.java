@@ -37,10 +37,6 @@ public class MainWindow extends JFrame
 		this.setVisible(true);
 	}
 	
-	public static void main (String args[])
-	{
-		MainWindow mw = new MainWindow();
-	}
 	
 	public ShowTextPanel getSTP()
 	{
