@@ -37,7 +37,13 @@ public class ShowTextPanel extends JPanel
 		String originalText = this.text.getText();
 		this.text.setText(originalText + '\n' + '\n' + message); 
 		this.text.repaint();
-		
+	}
+	
+	public void textReceived(String message)
+	{
+		String originalText = this.text.getText();
+		this.text.setText(originalText + '\n' + '\n' + message); 
+		this.text.repaint();
 	}
 	
 	public JTextArea getJTA()

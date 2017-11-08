@@ -35,6 +35,8 @@ public class SendButtonListener implements ActionListener{
 		this.jta.setText(null);
 		this.jta.repaint();
 		this.mw.getSTP().textAdded(message);
+		this.mw.incrementMessageCounter();
+		this.mw.updateMyLastWords(message);
 	}
 
 }

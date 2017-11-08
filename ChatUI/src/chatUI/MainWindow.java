@@ -16,6 +16,11 @@ public class MainWindow extends JFrame
 	private String userName;
 	private JOptionPane chooseUserName;
 	
+	private int messageCounter = 0;
+	private String myLastWords = "";
+	
+	public static String name;
+	
 	public MainWindow()
 	{
 		this.tp = new TitlePanel(this);
@@ -31,6 +36,7 @@ public class MainWindow extends JFrame
 		
 		this.chooseUserName = new JOptionPane("User Name");
 		this.userName = this.chooseUserName.showInputDialog("Please name yourself:");
+		this.name = this.userName;
 		
 		this.setMinimumSize(new Dimension(260,540));
 		this.pack();
@@ -51,6 +57,26 @@ public class MainWindow extends JFrame
 	public String getUserName()
 	{
 		return this.userName;
+	}
+	
+	public void incrementMessageCounter()
+	{
+		this.messageCounter++;
+	}
+	
+	public int getMessageCounter()
+	{
+		return this.messageCounter;
+	}
+	
+	public void updateMyLastWords(String message)
+	{
+		this.myLastWords = "<" + this.userName + ">: " + message;
+	}
+	
+	public String getMyLastWords()
+	{
+		return this.myLastWords;
 	}
 	
 }
