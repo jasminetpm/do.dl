@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.io.IOException;
@@ -17,13 +18,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.AbstractSpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.colorchooser.AbstractColorChooserPanel;
 
-
+import listeners.ColorCancelListener;
+import listeners.ColorOKListener;
 import listeners.ColorPickerListener;
 import listeners.LayerSelectorListener;
 import listeners.StrokeSizeListener;
@@ -35,6 +39,9 @@ public class PaintWindow extends JFrame {
 	private Dimension WINDOW_SIZE = new Dimension(700, 540);
 	private static DoodlePanel paintPanel;
 	private JPanel toolbar;
+	private JColorChooser jcc;
+	private JDialog colorDialog;
+	private JFrame colorFrame;
 	// Tool buttons
 	private JButton[] toolbarButtons = new JButton[7];
 	private JButton colorButton;
@@ -53,7 +60,7 @@ public class PaintWindow extends JFrame {
 	private int toolType = 0;
 	private int currentLayer = 0;
 	private Color currentColor = Color.RED;
-	// Icons
+	// Button icons
 	private Icon brush = new ImageIcon("imagesource/ic_brush_black_24dp_1x.png");
 	private Icon eraser = new ImageIcon("imagesource/double-sided-eraser.png");
 	private Icon text = new ImageIcon("imagesource/ic_text_fields_black_24dp_1x.png");
@@ -62,6 +69,8 @@ public class PaintWindow extends JFrame {
 	private Icon upload = new ImageIcon("imagesource/ic_file_upload_black_24dp_1x.png");
 	private Icon download = new ImageIcon("imagesource/ic_file_download_black_24dp_1x.png");
 	private final Icon[] TOOL_LIST = { brush, eraser, text, comment, undo, upload, download };
+	// Spinner icons
+	private Icon layer = new ImageIcon("imagesource/ic_layers_black_24dp_1x.png");
 	// Listeners
 	private ColorPickerListener colorListener;
 	
@@ -74,12 +83,13 @@ public class PaintWindow extends JFrame {
 		this.paintClient = new PaintClient(ip, port);
 		this.paintClient.start();
 		// Instantiating listeners
-		this.colorListener = new ColorPickerListener(this);
+		this.colorListener = new ColorPickerListener(this);	
 		// Instantiating JPanels
 		this.setLayout(new BorderLayout());
 		this.toolbar = new JPanel();		
 		PaintWindow.paintPanel = new DoodlePanel(this);
 		this.populateToolbar(); // Adds various buttons to toolbar
+		this.createColorChooser();
 		// Adding JPanels to JFrame
 		this.add(PaintWindow.paintPanel, BorderLayout.CENTER);
 		this.add(this.toolbar, BorderLayout.LINE_START);
@@ -112,12 +122,35 @@ public class PaintWindow extends JFrame {
 		this.strokeSizeSelector = new JSpinner(this.strokeValues);
 		this.strokeSizeSelector.addChangeListener(new StrokeSizeListener(this));
 		this.toolbar.add(this.strokeSizeSelector);
-		
-		// Instantiating current color
+		// Setting color chooser
 		this.colorButton = new JButton();
 		this.setColorChooserIcon();
 		this.colorButton.addActionListener(this.colorListener);
 		this.toolbar.add(this.colorButton);
+	}
+	
+	private void createColorChooser()
+	{
+		this.jcc = new JColorChooser();
+		AbstractColorChooserPanel[] panels = this.jcc.getChooserPanels();
+		for (int i = 0; i < panels.length; i++) // Removing unwanted color chooser panels
+		{
+			String panelName = panels[i].getClass().getName();
+			if (panelName.equals("javax.swing.colorchooser.ColorChooserPanel"))
+			{
+				this.jcc.removeChooserPanel(panels[i]);
+			} 
+		}
+		this.colorDialog = JColorChooser.createDialog(this, 
+                "Pick your colour", 
+                true, 
+                this.jcc, 
+                new ColorOKListener(this, this.jcc), 
+                new ColorCancelListener(this));
+	}
+	public void viewColorChooser()
+	{
+		this.colorDialog.setVisible(true);
 	}
 	
 	public int getStrokeSize()
@@ -232,7 +265,7 @@ public class PaintWindow extends JFrame {
 	
 	public static void main (String args[]) throws UnknownHostException, IOException
 	{
-		PaintWindow pw = new PaintWindow("127.0.0.1", 9876);
+		PaintWindow pw = new PaintWindow("127.0.0.1", 9872);
 	}
 
 }
