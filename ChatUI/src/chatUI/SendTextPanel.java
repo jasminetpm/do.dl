@@ -18,15 +18,15 @@ public class SendTextPanel extends JPanel
 {
 	private MainWindow mw;
 	private JButton sendButton;
-	private JTextArea jta;
+	public  JTextArea jta;
 
 	public SendTextPanel(MainWindow mw) {
 		// TODO Auto-generated constructor stub
 		this.mw = mw;
 		this.setLayout(new BorderLayout());
 		this.sendButton = new JButton("Send");
-		this.sendButton.addActionListener(new SendButtonListener(this.mw));
 		this.jta = new JTextArea(7, 15);
+		this.sendButton.addActionListener(new SendButtonListener(this.mw, this.jta));
 		this.jta.setBackground(Color.WHITE);
 		this.add(this.sendButton, BorderLayout.EAST);
 		this.add(this.jta, BorderLayout.WEST);
@@ -35,6 +35,11 @@ public class SendTextPanel extends JPanel
 	public JTextArea getJTA()
 	{
 		return this.jta;
+	}
+	
+	public String getTextJTA()
+	{
+		return this.jta.getText();
 	}
 
 }

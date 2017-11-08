@@ -3,6 +3,8 @@ package listeners;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JTextArea;
+
 import chatUI.MainWindow;
 import chatUI.SendTextPanel;
 import serverDealer.SendString;
@@ -10,22 +12,23 @@ import serverDealer.SendString;
 
 public class SendButtonListener implements ActionListener{
 	private MainWindow mw;
-	private SendTextPanel stp;
+	private JTextArea jta;
 	
-	public SendButtonListener(MainWindow mw)
+	public SendButtonListener(MainWindow mw, JTextArea jta)
 	{
 		this.mw = mw;
-		this.stp = this.mw.getSendTP();
+		this.jta = jta;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		String message = this.stp.getJTA().getText();
+		String message = this.jta.getText();
 		System.out.println(message);
 		new SendString(this.mw, message);
-		this.stp.getJTA().setText(null);
-		this.stp.getJTA().repaint();
+		this.jta.setText(null);
+		this.jta.repaint();
+		this.mw.getSTP().textAdded(message);
 	}
 
 }

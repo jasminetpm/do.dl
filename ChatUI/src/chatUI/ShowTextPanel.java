@@ -22,8 +22,9 @@ public class ShowTextPanel extends JPanel
 		this.text = new JTextArea();
 		this.text.setPreferredSize(new Dimension(230,350));
 		this.text.setEditable(false);
-		this.text.setText("test");
+//		this.text.setText("test");
 		this.jsp = new JScrollPane(text);
+		this.text.setLineWrap(true);
 		this.jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		this.jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		this.add(this.jsp);
@@ -32,8 +33,9 @@ public class ShowTextPanel extends JPanel
 	
 	public void textAdded(String message)
 	{
+		message = "<" + this.mw.getUserName() + ">: " + message;
 		String originalText = this.text.getText();
-		this.text.setText(originalText + '\n' + message); 
+		this.text.setText(originalText + '\n' + '\n' + message); 
 		this.text.repaint();
 		
 	}

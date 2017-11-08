@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 
 public class MainWindow extends JFrame
@@ -11,6 +12,9 @@ public class MainWindow extends JFrame
 	private SendTextPanel sendp;
 	private ShowTextPanel showp;
 	private TitlePanel tp;
+	
+	private String userName;
+	private JOptionPane chooseUserName;
 	
 	public MainWindow()
 	{
@@ -24,6 +28,10 @@ public class MainWindow extends JFrame
 		this.getContentPane().add(this.tp, BorderLayout.PAGE_START);
 		this.getContentPane().add(this.showp, BorderLayout.CENTER);
 		this.getContentPane().add(this.sendp,BorderLayout.PAGE_END);
+		
+		this.chooseUserName = new JOptionPane("User Name");
+		this.userName = this.chooseUserName.showInputDialog("Please name yourself:");
+		
 		this.setMinimumSize(new Dimension(260,540));
 		this.pack();
 		this.setVisible(true);
@@ -42,6 +50,11 @@ public class MainWindow extends JFrame
 	public SendTextPanel getSendTP()
 	{
 		return this.sendp;
+	}
+	
+	public String getUserName()
+	{
+		return this.userName;
 	}
 	
 }
