@@ -34,4 +34,14 @@ public class MainWindow extends JFrame
 		MainWindow mw = new MainWindow();
 	}
 	
+	public ShowTextPanel getSTP()
+	{
+		return this.showp;
+	}
+	
+	public SendTextPanel getSendTP()
+	{
+		return this.sendp;
+	}
+	
 }

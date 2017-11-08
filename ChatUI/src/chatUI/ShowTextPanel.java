@@ -37,5 +37,10 @@ public class ShowTextPanel extends JPanel
 		this.text.repaint();
 		
 	}
+	
+	public JTextArea getJTA()
+	{
+		return this.text;
+	}
 
 }
