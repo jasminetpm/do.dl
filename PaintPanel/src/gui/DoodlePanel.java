@@ -21,10 +21,10 @@ public class DoodlePanel extends JPanel {
 	{
 		this.myWindow = pw;
 		this.pml = new PanelMouseListener(this.myWindow);
-		
 		// add 3 layers
 		this.layers = new ArrayList<BufferedImage>();
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++) 
+		{
 			BufferedImage img = new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB);
 			this.layers.add(img);
 		}

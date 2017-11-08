@@ -36,51 +36,54 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		this.points.add(new Point(e.getX(), e.getY()));
-		switch (this.myWindow.getToolType()) {
-		case 0:
-			if (this.points.size() > 0) {
-				int layerNumber = this.myWindow.getCurrentLayer();
-				BufferedImage img = this.myWindow.getDoodlePanel().getLayers().get(layerNumber);
-				Graphics2D g = img.createGraphics();
-	
-				g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-				g.setColor(this.myWindow.getColor());
-				g.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
-				GeneralPath path = new GeneralPath();
-	
-				path.moveTo(this.points.get(0).x, this.points.get(0).y);
-				for (int i = 1; i < this.points.size(); i++) {
-					path.lineTo(this.points.get(i).x, this.points.get(i).y);
+		switch (this.myWindow.getToolType()) 
+		{
+			case 0:
+				if (this.points.size() > 0) 
+				{
+					int layerNumber = this.myWindow.getCurrentLayer();
+					BufferedImage img = this.myWindow.getDoodlePanel().getLayers().get(layerNumber);
+					Graphics2D g = img.createGraphics();
+		
+					g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+					g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+					g.setColor(this.myWindow.getColor());
+					g.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
+					GeneralPath path = new GeneralPath();
+		
+					path.moveTo(this.points.get(0).x, this.points.get(0).y);
+					for (int i = 1; i < this.points.size(); i++) {
+						path.lineTo(this.points.get(i).x, this.points.get(i).y);
+					}
+		
+					g.draw(path);
+					g.dispose();
+					this.myWindow.getDoodlePanel().repaint();
 				}
-	
-				g.draw(path);
-				g.dispose();
-				this.myWindow.getDoodlePanel().repaint();
-			}
-			break;
-		case 1:
-			if (this.points.size() > 0) {
-				int layerNumber = this.myWindow.getCurrentLayer();
-				BufferedImage img = this.myWindow.getDoodlePanel().getLayers().get(layerNumber);
-				Graphics2D g = img.createGraphics();
-
-				g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-				g.setComposite(AlphaComposite.Clear);
-				g.setColor(new Color(255, 255, 255, 255));
-				g.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
-				GeneralPath path = new GeneralPath();
-
-				path.moveTo(this.points.get(0).x, this.points.get(0).y);
-				for (int i = 1; i < this.points.size(); i++) {
-					path.lineTo(this.points.get(i).x, this.points.get(i).y);
+				break;
+			case 1:
+				if (this.points.size() > 0) 
+				{
+					int layerNumber = this.myWindow.getCurrentLayer();
+					BufferedImage img = this.myWindow.getDoodlePanel().getLayers().get(layerNumber);
+					Graphics2D g = img.createGraphics();
+		
+					g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+					g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+					g.setComposite(AlphaComposite.Clear);
+					g.setColor(new Color(255, 255, 255, 255));
+					g.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
+					GeneralPath path = new GeneralPath();
+		
+					path.moveTo(this.points.get(0).x, this.points.get(0).y);
+					for (int i = 1; i < this.points.size(); i++) {
+						path.lineTo(this.points.get(i).x, this.points.get(i).y);
+					}
+		
+					g.draw(path);
+					g.dispose();
+					this.myWindow.getDoodlePanel().repaint();
 				}
-
-				g.draw(path);
-				g.dispose();
-				this.myWindow.getDoodlePanel().repaint();
-			}
 		}
 	}
 

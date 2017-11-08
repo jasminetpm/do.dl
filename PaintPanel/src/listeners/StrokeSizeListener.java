@@ -14,7 +14,8 @@ public class StrokeSizeListener implements ChangeListener {
 	}
 
 	@Override
-	public void stateChanged(ChangeEvent e) {
+	public void stateChanged(ChangeEvent e) 
+	{
 		// TODO Auto-generated method stub
 		JSpinner source = (JSpinner) e.getSource();
 		int size = (int) source.getValue();

@@ -26,26 +26,34 @@ import javax.swing.SpinnerNumberModel;
 
 import listeners.ColorPickerListener;
 import listeners.LayerSelectorListener;
+import listeners.StrokeSizeListener;
 import listeners.ToolSelectorListener;
 import model.Instruction;
 
 public class PaintWindow extends JFrame {
-	
+	// Panels
+	private Dimension WINDOW_SIZE = new Dimension(700, 540);
 	private static DoodlePanel paintPanel;
 	private JPanel toolbar;
+	// Tool buttons
 	private JButton[] toolbarButtons = new JButton[7];
-	private Dimension WINDOW_SIZE = new Dimension(700, 540);
-	private SpinnerNumberModel strokeValues = new SpinnerNumberModel(5,
-			                                                         1, //min
-			                                                         10, //max
-			                                                         1); //step
+	private JButton colorButton;
 	private JSpinner strokeSizeSelector;
+	private JSpinner layerSelector;
+	// Default values
+	private SpinnerNumberModel strokeValues = new SpinnerNumberModel(5,
+			                                                         1, // minimum value
+			                                                         10, // maximum value
+			                                                         1); // step value
+	private SpinnerNumberModel layerValues = new SpinnerNumberModel(1,
+                                                                    1, // minimum value
+                                                                    3, // maximum value
+                                                                    1); // step value
 	private int strokeSize = 5;
 	private int toolType = 0;
 	private int currentLayer = 0;
-	private JButton colorPicker;
 	private Color currentColor = Color.RED;
-	//Icons
+	// Icons
 	private Icon brush = new ImageIcon("imagesource/ic_brush_black_24dp_1x.png");
 	private Icon eraser = new ImageIcon("imagesource/double-sided-eraser.png");
 	private Icon text = new ImageIcon("imagesource/ic_text_fields_black_24dp_1x.png");
@@ -53,9 +61,10 @@ public class PaintWindow extends JFrame {
 	private Icon undo = new ImageIcon("imagesource/ic_undo_black_24dp_1x.png");
 	private Icon upload = new ImageIcon("imagesource/ic_file_upload_black_24dp_1x.png");
 	private Icon download = new ImageIcon("imagesource/ic_file_download_black_24dp_1x.png");
-	private final Icon[] TOOL_LIST = { brush, text, eraser, comment, undo, upload, download };
-	//Listeners
+	private final Icon[] TOOL_LIST = { brush, eraser, text, comment, undo, upload, download };
+	// Listeners
 	private ColorPickerListener colorListener;
+	
 	private PaintClient paintClient;
 	private static int clientId;
 	
@@ -64,20 +73,19 @@ public class PaintWindow extends JFrame {
 		// Creating connection to server
 		this.paintClient = new PaintClient(ip, port);
 		this.paintClient.start();
-		
 		// Instantiating listeners
 		this.colorListener = new ColorPickerListener(this);
-		// Instantiating and adding JPanels
+		// Instantiating JPanels
 		this.setLayout(new BorderLayout());
 		this.toolbar = new JPanel();		
 		PaintWindow.paintPanel = new DoodlePanel(this);
+		this.populateToolbar(); // Adds various buttons to toolbar
+		// Adding JPanels to JFrame
 		this.add(PaintWindow.paintPanel, BorderLayout.CENTER);
-		this.populateToolbar();
 		this.add(this.toolbar, BorderLayout.LINE_START);
 		// Fixing window dimensions
 		this.setPreferredSize(WINDOW_SIZE);;
 		this.setResizable(false);
-		
 		// Default JFrame operations
 		this.pack();
 		this.setVisible(true);
@@ -86,6 +94,7 @@ public class PaintWindow extends JFrame {
 	
 	private void populateToolbar()
 	{
+		// Setting toolbar buttons
 		this.toolbar.setLayout(new GridLayout(0, 1));
 		for (int i = 0; i < toolbarButtons.length; i++)
 		{
@@ -93,18 +102,24 @@ public class PaintWindow extends JFrame {
 			if (i == 0 || i == 1) {
 				toolbarButtons[i].addActionListener(new ToolSelectorListener(i, this));
 			}
-			if (i == 2 || i == 3) {
-				toolbarButtons[i].addActionListener(new LayerSelectorListener((i-2), this));
-			}
 			this.toolbar.add(toolbarButtons[i]);
 		}
+		// Setting layer selector
+		this.layerSelector = new JSpinner(this.layerValues);
+		this.layerSelector.addChangeListener(new LayerSelectorListener(this));
+		this.toolbar.add(this.layerSelector);
+		// Setting stroke size selector
 		this.strokeSizeSelector = new JSpinner(this.strokeValues);
+		this.strokeSizeSelector.addChangeListener(new StrokeSizeListener(this));
 		this.toolbar.add(this.strokeSizeSelector);
-		this.colorPicker = new JButton();
+		
+		// Instantiating current color
+		this.colorButton = new JButton();
 		this.setColorChooserIcon();
-		this.colorPicker.addActionListener(this.colorListener);
-		this.toolbar.add(this.colorPicker);
+		this.colorButton.addActionListener(this.colorListener);
+		this.toolbar.add(this.colorButton);
 	}
+	
 	public int getStrokeSize()
 	{
 		return this.strokeSize;
@@ -127,8 +142,8 @@ public class PaintWindow extends JFrame {
 	
 	public void setColorChooserIcon()
 	{
-		this.colorPicker.setOpaque(true);
-		this.colorPicker.setBackground(this.currentColor);
+		this.colorButton.setOpaque(true);
+		this.colorButton.setBackground(this.currentColor);
 	}
 	
 	public void sendInstruction(Instruction instr) {
