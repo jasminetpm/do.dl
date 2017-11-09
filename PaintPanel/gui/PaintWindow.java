@@ -59,7 +59,7 @@ public class PaintWindow extends JFrame {
 			                                                         1); // step value
 	private SpinnerNumberModel layerValues = new SpinnerNumberModel(1,
                                                                     1, // minimum value
-                                                                    3, // maximum value
+                                                                    4, // maximum value
                                                                     1); // step value
 	private int strokeSize = 5;
 	private int toolType = 0;
