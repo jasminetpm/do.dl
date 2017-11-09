@@ -30,6 +30,7 @@ import javax.swing.AbstractSpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 
+import chatUI.MainWindow;
 import listeners.ColorCancelListener;
 import listeners.ColorOKListener;
 import listeners.ColorPickerListener;
@@ -40,8 +41,9 @@ import model.Instruction;
 
 public class PaintWindow extends JFrame {
 	// Panels
-	private Dimension WINDOW_SIZE = new Dimension(700, 540);
+	private Dimension WINDOW_SIZE = new Dimension(960, 540);
 	private static DoodlePanel paintPanel;
+	private MainWindow chatPanel;
 	private JPanel toolbar;
 	private JColorChooser jcc;
 	private JDialog colorDialog;
@@ -85,7 +87,7 @@ public class PaintWindow extends JFrame {
 	private PaintClient paintClient;
 	private static int clientId;
 	
-	public PaintWindow(String ip, int port) throws UnknownHostException, IOException
+	public PaintWindow(String ip, int port) throws UnknownHostException, IOException, InterruptedException
 	{
 		// Creating connection to server
 		this.paintClient = new PaintClient(ip, port);
@@ -96,11 +98,13 @@ public class PaintWindow extends JFrame {
 		this.setLayout(new BorderLayout());
 		this.toolbar = new JPanel();		
 		PaintWindow.paintPanel = new DoodlePanel(this);
+		this.chatPanel = new MainWindow("127.0.0.1");
 		this.populateToolbar(); // Adds various buttons to toolbar
 		this.createColorChooser();
 		// Adding JPanels to JFrame
 		this.add(PaintWindow.paintPanel, BorderLayout.CENTER);
 		this.add(this.toolbar, BorderLayout.LINE_START);
+		this.add(this.chatPanel, BorderLayout.LINE_END);
 		// Fixing window dimensions
 		this.setPreferredSize(WINDOW_SIZE);;
 		this.setResizable(false);
@@ -286,7 +290,7 @@ public class PaintWindow extends JFrame {
 		}
 	}
 	
-	public static void main (String args[]) throws UnknownHostException, IOException
+	public static void main (String args[]) throws UnknownHostException, IOException, InterruptedException
 	{
 		PaintWindow pw = new PaintWindow("127.0.0.1", 9876);
 	}
