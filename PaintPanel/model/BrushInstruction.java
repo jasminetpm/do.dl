@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class BrushInstruction extends Instruction {
-	private int clientId;
 	private Color color;
 	private int lineWidth;
 	private int layer;
