@@ -20,7 +20,7 @@ public class ShowTextPanel extends JPanel
 		// TODO Auto-generated constructor stub
 		this.mw = mw;
 		this.text = new JTextArea();
-		this.text.setPreferredSize(new Dimension(230,350));
+		this.text.setPreferredSize(new Dimension(260,430));
 		this.text.setEditable(false);
 //		this.text.setText("test");
 		this.jsp = new JScrollPane(text);

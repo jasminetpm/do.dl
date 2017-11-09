@@ -25,12 +25,12 @@ public class SendTextPanel extends JPanel
 		this.mw = mw;
 		this.setLayout(new BorderLayout());
 		this.sendButton = new JButton("Send");
-		this.jta = new JTextArea(7, 15);
+		this.jta = new JTextArea();
 		this.jta.requestFocus();
 		this.sendButton.addActionListener(new SendButtonListener(this.mw, this.jta));
 		this.jta.setBackground(Color.WHITE);
-		this.add(this.sendButton, BorderLayout.EAST);
-		this.add(this.jta, BorderLayout.WEST);
+		this.add(this.sendButton, BorderLayout.LINE_END);
+		this.add(this.jta, BorderLayout.CENTER);
 	}
 	
 	public JTextArea getJTA()

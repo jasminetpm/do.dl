@@ -49,7 +49,8 @@ public class MainWindow extends JFrame
 		this.userName = this.chooseUserName.showInputDialog("Please name yourself:");
 		this.name = this.userName;
 		
-		this.setMinimumSize(new Dimension(260,540));
+		this.setPreferredSize(new Dimension(260, 540));
+		this.setResizable(false);
 		this.pack();
 		this.setVisible(true);
 	}
