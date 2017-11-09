@@ -66,18 +66,18 @@ public class PaintWindow extends JFrame {
 	private int currentLayer = 0;
 	private Color currentColor = Color.RED;
 	// Button icons
-	private Icon brush = new ImageIcon("imagesource/ic_brush_black_24dp_1x.png");
-	private Icon eraser = new ImageIcon("imagesource/double-sided-eraser.png");
-	private Icon text = new ImageIcon("imagesource/ic_text_fields_black_24dp_1x.png");
-	private Icon comment = new ImageIcon("imagesource/ic_comment_black_24dp_1x.png");
-	private Icon undo = new ImageIcon("imagesource/ic_undo_black_24dp_1x.png");
-	private Icon upload = new ImageIcon("imagesource/ic_file_upload_black_24dp_1x.png");
-	private Icon download = new ImageIcon("imagesource/ic_file_download_black_24dp_1x.png");
+	private Icon brush = new ImageIcon("PaintPanel/imagesource/ic_brush_black_24dp_1x.png");
+	private Icon eraser = new ImageIcon("PaintPanel/imagesource/double-sided-eraser.png");
+	private Icon text = new ImageIcon("PaintPanel/imagesource/ic_text_fields_black_24dp_1x.png");
+	private Icon comment = new ImageIcon("PaintPanel/imagesource/ic_comment_black_24dp_1x.png");
+	private Icon undo = new ImageIcon("PaintPanel/imagesource/ic_undo_black_24dp_1x.png");
+	private Icon upload = new ImageIcon("PaintPanel/imagesource/ic_file_upload_black_24dp_1x.png");
+	private Icon download = new ImageIcon("PaintPanel/imagesource/ic_file_download_black_24dp_1x.png");
 	private final Icon[] TOOL_LIST = { brush, eraser, text, comment, undo, upload, download };
 	// Component icons
-	private Icon layerIcon = new ImageIcon("imagesource/ic_layers_black_24dp_1x.png");
-	private Icon strokeSizeIcon = new ImageIcon("imagesource/ic_line_weight_black_24dp_1x.png");
-	private Icon colorIcon = new ImageIcon("imagesource/ic_color_lens_black_24dp_1x.png");
+	private Icon layerIcon = new ImageIcon("PaintPanel/imagesource/ic_layers_black_24dp_1x.png");
+	private Icon strokeSizeIcon = new ImageIcon("PaintPanel/imagesource/ic_line_weight_black_24dp_1x.png");
+	private Icon colorIcon = new ImageIcon("PaintPanel/imagesource/ic_color_lens_black_24dp_1x.png");
 	private JLabel layerLabel = new JLabel(layerIcon);
 	private JLabel strokeSizeLabel = new JLabel(strokeSizeIcon);
 	private JLabel colorLabel = new JLabel(colorIcon);
@@ -98,7 +98,7 @@ public class PaintWindow extends JFrame {
 		this.setLayout(new BorderLayout());
 		this.toolbar = new JPanel();		
 		PaintWindow.paintPanel = new DoodlePanel(this);
-		this.chatPanel = new MainWindow("127.0.0.1");
+		this.chatPanel = new MainWindow("172.17.167.148");
 		this.populateToolbar(); // Adds various buttons to toolbar
 		this.createColorChooser();
 		// Adding JPanels to JFrame
@@ -292,7 +292,7 @@ public class PaintWindow extends JFrame {
 	
 	public static void main (String args[]) throws UnknownHostException, IOException, InterruptedException
 	{
-		PaintWindow pw = new PaintWindow("127.0.0.1", 9876);
+		PaintWindow pw = new PaintWindow("172.17.167.148", 9876);
 	}
 
 }
