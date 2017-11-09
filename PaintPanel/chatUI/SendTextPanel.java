@@ -12,6 +12,7 @@ import javax.swing.JTextArea;
 import com.sun.xml.internal.txw2.Document;
 
 import chatUI.MainWindow;
+import listeners.EnterKeyListener;
 import listeners.SendButtonListener;
 
 public class SendTextPanel extends JPanel 
@@ -28,6 +29,7 @@ public class SendTextPanel extends JPanel
 		this.jta = new JTextArea();
 		this.jta.requestFocus();
 		this.sendButton.addActionListener(new SendButtonListener(this.mw, this.jta));
+		this.jta.addKeyListener(new EnterKeyListener(this.mw, this.jta));
 		this.jta.setBackground(Color.WHITE);
 		this.add(this.sendButton, BorderLayout.LINE_END);
 		this.add(this.jta, BorderLayout.CENTER);
