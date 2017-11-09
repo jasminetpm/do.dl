@@ -73,7 +73,8 @@ public class PaintWindow extends JFrame {
 	private Icon undo = new ImageIcon("PaintPanel/imagesource/ic_undo_black_24dp_1x.png");
 	private Icon upload = new ImageIcon("PaintPanel/imagesource/ic_file_upload_black_24dp_1x.png");
 	private Icon download = new ImageIcon("PaintPanel/imagesource/ic_file_download_black_24dp_1x.png");
-	private final Icon[] TOOL_LIST = { brush, eraser, text, comment, undo, upload, download };
+	private Icon bucket = new ImageIcon("PaintPanel/imagesource/ic_format_color_fill_black_24dp_1x.png");
+	private final Icon[] TOOL_LIST = { brush, eraser, bucket, comment, undo, upload, download };
 	// Component icons
 	private Icon layerIcon = new ImageIcon("PaintPanel/imagesource/ic_layers_black_24dp_1x.png");
 	private Icon strokeSizeIcon = new ImageIcon("PaintPanel/imagesource/ic_line_weight_black_24dp_1x.png");
@@ -121,7 +122,7 @@ public class PaintWindow extends JFrame {
 		for (int i = 0; i < toolbarButtons.length; i++)
 		{
 			toolbarButtons[i] = new JButton(TOOL_LIST[i]);
-			if (i == 0 || i == 1) {
+			if (i < 3) {
 				toolbarButtons[i].addActionListener(new ToolSelectorListener(i, this));
 			}
 			this.toolbar.add(toolbarButtons[i]);

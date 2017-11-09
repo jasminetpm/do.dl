@@ -94,13 +94,12 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 	public void mouseClicked(MouseEvent e) {
 		switch (this.myWindow.getToolType()) {
 		case 2:
-			break;
-		default:
 			System.out.println(this.myWindow.getColor().hashCode());
 			BucketInstruction bucketInstr = new BucketInstruction(e.getX(), e.getY(), this.myWindow.getColor().hashCode(),
 					this.myWindow.getCurrentLayer(), this.myWindow.getClientId());
 			this.myWindow.getDoodlePanel().executeInstruction(bucketInstr);
 			this.myWindow.sendInstruction(bucketInstr);
+			break;
 		}
 	}
 
