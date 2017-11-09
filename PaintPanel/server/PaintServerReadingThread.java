@@ -6,11 +6,11 @@ import java.io.ObjectInputStream;
 
 import model.Instruction;
 
-public class ReadingThread extends Thread {
+public class PaintServerReadingThread extends Thread {
 	private ObjectInputStream ois;
 	private InputStream is;
 	
-	public ReadingThread(InputStream _is) {
+	public PaintServerReadingThread(InputStream _is) {
 		this.is = _is;
 	}
 	
