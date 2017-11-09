@@ -11,7 +11,6 @@ public class ClientMain {
 	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException
 	{
 		MyClient mc = new MyClient("127.0.0.1", SetPort.port, new MainWindow());
-		mc.setName("Client A");
 		mc.sendMessage();
 	
 		

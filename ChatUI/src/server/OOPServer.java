@@ -11,7 +11,7 @@ public class OOPServer
 	private ServerSocket servSock;
 	private Socket client;
 	private PrintWriter pw;
-	private LinkedList<Socket> clientList;
+	private LinkedList<ClientThread> clientList;
 	private int port;
 
 	public OOPServer(int port)
@@ -24,7 +24,7 @@ public class OOPServer
 			e.printStackTrace();
 		}
 		
-		this.clientList = new LinkedList<Socket>();
+		this.clientList = new LinkedList<ClientThread>();
 	}
 
 	public void acceptClientLoop()
@@ -34,8 +34,8 @@ public class OOPServer
 			Socket c;
 			try {
 				c = this.servSock.accept();
-				this.clientList.add(c);
 				ClientThread th = new ClientThread(c, this);
+				this.clientList.add(th);
 				th.start();
 				System.out.println("Just accepted a client. Going to the next iteration");
 			} catch (IOException e) {
@@ -69,7 +69,7 @@ public class OOPServer
 		this.servSock.close();
 	}
 	
-	public LinkedList<Socket> getClientList()
+	public LinkedList<ClientThread> getClientList()
 	{
 		return this.clientList;
 	}

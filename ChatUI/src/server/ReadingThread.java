@@ -27,13 +27,14 @@ public class ReadingThread extends Thread
 				int i;
 				for (i = 0; i < this.server.getClientList().size(); i++)
 				{
-					if (this.server.getClientList().get(i).equals(this.ct.getClient()))
+					if (this.server.getClientList().get(i).equals(this.ct))
 					{
 						
 					}
 					else
 					{
-						this.ct.sendMessage(inc);
+						this.server.getClientList().get(i).sendMessage(inc);
+						System.out.println("I am sending out the message to client " + i + "\n");
 					}
 				}
 			}
