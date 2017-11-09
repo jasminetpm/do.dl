@@ -2,9 +2,14 @@ package chatUI;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.io.IOException;
+import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import client.MyClient;
+import controller.SetPort;
 
 
 public class MainWindow extends JFrame
@@ -20,9 +25,15 @@ public class MainWindow extends JFrame
 	private String myLastWords = "";
 	
 	public static String name;
+	private MyClient mc;
+	private String ip;
 	
-	public MainWindow()
+	public MainWindow(String ip) throws UnknownHostException, IOException, InterruptedException
 	{
+		this.ip = ip;
+		this.mc = new MyClient(ip, SetPort.port, this);
+		this.mc.start();
+		
 		this.tp = new TitlePanel(this);
 		this.showp = new ShowTextPanel(this);
 		this.sendp = new SendTextPanel(this);

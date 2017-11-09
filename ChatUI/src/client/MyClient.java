@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import chatUI.MainWindow;
 
-public class MyClient {
+public class MyClient extends Thread {
 	private Socket connection;
 	private BufferedReader br;
 	private PrintWriter pw;
@@ -21,12 +21,12 @@ public class MyClient {
 	
 	public MyClient(String ip, int port, MainWindow mw) throws UnknownHostException, IOException
 	{
+		this.mw = mw;
 		this.connection = new Socket(ip, port);
 		this.br = new BufferedReader (new InputStreamReader(this.connection.getInputStream()));
 		this.pw = new PrintWriter(this.connection.getOutputStream());
 		this.rc = new ReadingClient(this);
-		this.mw = mw;
-		this.rc.start();
+		//this.rc.start();
 		
 	}
 	
@@ -62,7 +62,8 @@ public class MyClient {
 		this.pw.close();
 		this.connection.close();
 	}
-	
+
+	/*
 	public void setName(String name)
 	{
 		this.name = name;
@@ -72,13 +73,24 @@ public class MyClient {
 	{
 		return this.name;
 	}
+	*/
 	
 	public MainWindow getMainWindow()
 	{
 		return this.mw;
 	}
-
 	
+
+	@Override
+	public void run() {
+		this.rc.start();
+		try {
+			this.sendMessage();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
 
 
