@@ -41,17 +41,12 @@ public class BucketInstruction extends Instruction {
 				if (this.pixels[r][c] == this.oldColor) {
 					this.pixels[r][c] = this.newColor;
 					
-					if (this.pixels[r-1][c] == this.oldColor) {
-						queue.add(new Point(c,(r-1)));
-					}
-					if (this.pixels[r+1][c] == this.oldColor) {
-						queue.add(new Point(c,(r+1)));
-					}
-					if (this.pixels[r][c-1] == this.oldColor) {
-						queue.add(new Point((c-1),r));
-					}
-					if (this.pixels[r][c+1] == this.oldColor) {
-						queue.add(new Point((c+1),r));
+					for (int i = r-1; i < r+2; i++) {
+						for (int j = c-1; j < c+2; j++) {
+							if (this.pixels[i][j] == this.oldColor) {
+								queue.add(new Point(j, i));
+							}
+						}
 					}
 				}
 			}
@@ -78,7 +73,7 @@ public class BucketInstruction extends Instruction {
 		
 		if (this.oldColor != this.newColor) {
 			System.out.println("Recursing...");
-			traverse(this.cursorY, this.cursorX);
+			this.traverse(this.cursorY, this.cursorX);
 			System.out.println("Done Recursing...");
 			for (int i=0; i < 650; i++) {
 				for (int j=0; j < 540; j++) {
