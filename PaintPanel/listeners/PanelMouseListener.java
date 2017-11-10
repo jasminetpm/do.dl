@@ -36,9 +36,9 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		this.points.add(new Point(e.getX(), e.getY()));
 		switch (this.myWindow.getToolType()) {
 		case 0:
+			this.points.add(new Point(e.getX(), e.getY()));
 			if (this.points.size() > 0) {
 				int layerNumber = this.myWindow.getCurrentLayer();
 				BufferedImage img = this.myWindow.getDoodlePanel().getLayers().get(layerNumber);
@@ -61,6 +61,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			}
 			break;
 		case 1:
+			this.points.add(new Point(e.getX(), e.getY()));
 			if (this.points.size() > 0) {
 				int layerNumber = this.myWindow.getCurrentLayer();
 				BufferedImage img = this.myWindow.getDoodlePanel().getLayers().get(layerNumber);
