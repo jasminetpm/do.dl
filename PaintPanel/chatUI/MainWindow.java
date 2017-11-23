@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -35,13 +36,13 @@ public class MainWindow extends JPanel
 		this.mc = new MyClient(ip, SetPort.port, this);
 		this.mc.start();
 		
-		this.tp = new TitlePanel(this);
+		//this.tp = new TitlePanel(this);
 		this.showp = new ShowTextPanel(this);
 		this.sendp = new SendTextPanel(this);
 		
 		this.setLayout(new BorderLayout());
 		
-		this.add(this.tp, BorderLayout.PAGE_START);
+		//this.add(this.tp, BorderLayout.PAGE_START);
 		this.add(this.showp, BorderLayout.CENTER);
 		this.add(this.sendp,BorderLayout.PAGE_END);
 		
@@ -49,6 +50,7 @@ public class MainWindow extends JPanel
 		this.userName = this.chooseUserName.showInputDialog("Please name yourself:");
 		this.name = this.userName;
 		
+		this.setBorder(BorderFactory.createEmptyBorder(1, 5, 1, 1));
 		this.setPreferredSize(new Dimension(260, 540));
 	}
 	

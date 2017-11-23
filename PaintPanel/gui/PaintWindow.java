@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,13 +43,14 @@ import model.Instruction;
 public class PaintWindow extends JFrame {
 	// Panels
 	private Dimension WINDOW_SIZE = new Dimension(960, 540);
+	private Dimension TOOLBAR_SIZE = new Dimension(30, 540);
 	private static DoodlePanel paintPanel;
 	private MainWindow chatPanel;
 	private JPanel toolbar;
 	private JColorChooser jcc;
 	private JDialog colorDialog;
 	// Tool buttons
-	private JButton[] toolbarButtons = new JButton[7];
+	private JButton[] toolbarButtons = new JButton[8];
 	private JButton colorButton;
 	private JSpinner strokeSizeSelector;
 	private JSpinner layerSelector;
@@ -66,15 +68,15 @@ public class PaintWindow extends JFrame {
 	private int currentLayer = 0;
 	private Color currentColor = Color.RED;
 	// Button icons
-	private Icon brush = new ImageIcon("PaintPanel/imagesource/ic_brush_black_24dp_1x.png");
-	private Icon eraser = new ImageIcon("PaintPanel/imagesource/double-sided-eraser.png");
-	private Icon text = new ImageIcon("PaintPanel/imagesource/ic_text_fields_black_24dp_1x.png");
-	private Icon comment = new ImageIcon("PaintPanel/imagesource/ic_comment_black_24dp_1x.png");
-	private Icon undo = new ImageIcon("PaintPanel/imagesource/ic_undo_black_24dp_1x.png");
-	private Icon upload = new ImageIcon("PaintPanel/imagesource/ic_file_upload_black_24dp_1x.png");
-	private Icon download = new ImageIcon("PaintPanel/imagesource/ic_file_download_black_24dp_1x.png");
-	private Icon bucket = new ImageIcon("PaintPanel/imagesource/ic_format_color_fill_black_24dp_1x.png");
-	private final Icon[] TOOL_LIST = { brush, eraser, bucket, comment, undo, upload, download };
+	private ImageIcon brush = new ImageIcon("PaintPanel/imagesource/ic_brush_black_24dp_1x.png");
+	private ImageIcon eraser = new ImageIcon("PaintPanel/imagesource/double-sided-eraser.png");
+	private ImageIcon text = new ImageIcon("PaintPanel/imagesource/ic_text_fields_black_24dp_1x.png");
+	private ImageIcon comment = new ImageIcon("PaintPanel/imagesource/ic_comment_black_24dp_1x.png");
+	private ImageIcon undo = new ImageIcon("PaintPanel/imagesource/ic_undo_black_24dp_1x.png");
+	private ImageIcon upload = new ImageIcon("PaintPanel/imagesource/ic_file_upload_black_24dp_1x.png");
+	private ImageIcon download = new ImageIcon("PaintPanel/imagesource/ic_file_download_black_24dp_1x.png");
+	private ImageIcon bucket = new ImageIcon("PaintPanel/imagesource/ic_format_color_fill_black_48dp_1x.png"); // double resolution
+	private final ImageIcon[] TOOL_LIST = { brush, eraser, bucket, text, comment, undo, upload, download };
 	// Component icons
 	private Icon layerIcon = new ImageIcon("PaintPanel/imagesource/ic_layers_black_24dp_1x.png");
 	private Icon strokeSizeIcon = new ImageIcon("PaintPanel/imagesource/ic_line_weight_black_24dp_1x.png");
@@ -97,9 +99,9 @@ public class PaintWindow extends JFrame {
 		this.colorListener = new ColorPickerListener(this);	
 		// Instantiating JPanels
 		this.setLayout(new BorderLayout());
-		this.toolbar = new JPanel();		
+		this.toolbar = new JPanel();
 		PaintWindow.paintPanel = new DoodlePanel(this);
-		this.chatPanel = new MainWindow("192.168.0.125");
+		this.chatPanel = new MainWindow("127.0.0.1");
 		this.populateToolbar(); // Adds various buttons to toolbar
 		this.createColorChooser();
 		// Adding JPanels to JFrame
@@ -119,16 +121,27 @@ public class PaintWindow extends JFrame {
 	{
 		// Setting toolbar buttons
 		this.toolbar.setLayout(new GridLayout(0, 1));
+		this.toolbar.setBackground(Color.WHITE);
 		for (int i = 0; i < toolbarButtons.length; i++)
 		{
-			toolbarButtons[i] = new JButton(TOOL_LIST[i]);
+			toolbarButtons[i] = new JButton(resizeIcon(TOOL_LIST[i], 24, 24));
 			if (i < 3) {
 				toolbarButtons[i].addActionListener(new ToolSelectorListener(i, this));
 			}
 			this.toolbar.add(toolbarButtons[i]);
 		}
+		// Setting color chooser
+		JPanel colorSection = new JPanel(new BorderLayout());
+		colorSection.setBackground(Color.WHITE);
+		this.colorButton = new JButton();
+		this.setColorChooserIcon();
+		this.colorButton.addActionListener(this.colorListener);
+		colorSection.add(this.colorButton, BorderLayout.CENTER);
+		//colorSection.add(this.colorLabel, BorderLayout.LINE_START);
+		this.toolbar.add(colorSection);
 		// Setting layer selector
 		JPanel layerToolSection = new JPanel(new BorderLayout());
+		layerToolSection.setBackground(Color.WHITE);
 		this.layerSelector = new JSpinner(this.layerValues);
 		this.layerSelector.addChangeListener(new LayerSelectorListener(this));
 		layerToolSection.add(this.layerSelector, BorderLayout.CENTER);
@@ -136,19 +149,19 @@ public class PaintWindow extends JFrame {
 		this.toolbar.add(layerToolSection);
 		// Setting stroke size selector
 		JPanel strokeSizeSection = new JPanel(new BorderLayout());
+		strokeSizeSection.setBackground(Color.WHITE);
 		this.strokeSizeSelector = new JSpinner(this.strokeValues);
 		this.strokeSizeSelector.addChangeListener(new StrokeSizeListener(this));
 		strokeSizeSection.add(this.strokeSizeSelector, BorderLayout.CENTER);
 		strokeSizeSection.add(this.strokeSizeLabel, BorderLayout.LINE_START);
 		this.toolbar.add(strokeSizeSection);
-		// Setting color chooser
-		JPanel colorSection = new JPanel(new BorderLayout());
-		this.colorButton = new JButton();
-		this.setColorChooserIcon();
-		this.colorButton.addActionListener(this.colorListener);
-		colorSection.add(this.colorButton, BorderLayout.CENTER);
-		colorSection.add(this.colorLabel, BorderLayout.LINE_START);
-		this.toolbar.add(colorSection);
+	}
+	
+	private static Icon resizeIcon(ImageIcon icon, int newWidth, int newHeight)
+	{
+		Image img = icon.getImage();
+		Image resizedImage = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+		return new ImageIcon(resizedImage);
 	}
 	
 	private void createColorChooser()
@@ -293,7 +306,7 @@ public class PaintWindow extends JFrame {
 	
 	public static void main (String args[]) throws UnknownHostException, IOException, InterruptedException
 	{
-		PaintWindow pw = new PaintWindow("192.168.0.125", 9876);
+		PaintWindow pw = new PaintWindow("127.0.0.1", 9873);
 	}
 
 }

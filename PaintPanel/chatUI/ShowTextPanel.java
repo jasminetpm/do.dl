@@ -20,11 +20,10 @@ public class ShowTextPanel extends JPanel
 		// TODO Auto-generated constructor stub
 		this.mw = mw;
 		this.text = new JTextArea();
-		this.text.setPreferredSize(new Dimension(260,2000));
 		this.text.setEditable(false);
 //		this.text.setText("test");
 		this.jsp = new JScrollPane(text);
-		this.jsp.setPreferredSize(new Dimension(260,430) );
+		this.jsp.setPreferredSize(new Dimension(260, 470));
 		this.text.setLineWrap(true);
 		this.jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		this.jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
