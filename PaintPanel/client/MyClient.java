@@ -14,7 +14,6 @@ public class MyClient extends Thread {
 	private Socket connection;
 	private BufferedReader br;
 	private PrintWriter pw;
-	private String name;
 	private ReadingClient rc;
 	private MainWindow mw;
 	private int sendMessageCounter = 0;
@@ -42,7 +41,6 @@ public class MyClient extends Thread {
 	
 	public synchronized void sendMessage() throws InterruptedException
 	{
-		int i;
 		while (true)
 		{
 			while (this.sendMessageCounter < this.mw.getMessageCounter())

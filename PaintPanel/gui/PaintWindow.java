@@ -99,7 +99,7 @@ public class PaintWindow extends JFrame {
 		this.setLayout(new BorderLayout());
 		this.toolbar = new JPanel();		
 		PaintWindow.paintPanel = new DoodlePanel(this);
-		this.chatPanel = new MainWindow("192.168.0.125");
+		this.chatPanel = new MainWindow("localhost");
 		this.populateToolbar(); // Adds various buttons to toolbar
 		this.createColorChooser();
 		// Adding JPanels to JFrame
@@ -122,7 +122,7 @@ public class PaintWindow extends JFrame {
 		for (int i = 0; i < toolbarButtons.length; i++)
 		{
 			toolbarButtons[i] = new JButton(TOOL_LIST[i]);
-			if (i < 3) {
+			if (i < 6) {
 				toolbarButtons[i].addActionListener(new ToolSelectorListener(i, this));
 			}
 			this.toolbar.add(toolbarButtons[i]);
@@ -293,7 +293,7 @@ public class PaintWindow extends JFrame {
 	
 	public static void main (String args[]) throws UnknownHostException, IOException, InterruptedException
 	{
-		PaintWindow pw = new PaintWindow("192.168.0.125", 9876);
+		PaintWindow pw = new PaintWindow("localhost", 8000);
 	}
 
 }

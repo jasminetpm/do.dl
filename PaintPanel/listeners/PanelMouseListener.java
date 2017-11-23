@@ -22,9 +22,12 @@ import gui.PaintWindow;
 import model.BrushInstruction;
 import model.BucketInstruction;
 import model.EraserInstruction;
+import model.RectangleInstruction;
+import model.TextBoxInstruction;
 
 public class PanelMouseListener implements MouseListener, MouseMotionListener {
 
+	private int x1, y1, x2, y2;
 	private PaintWindow myWindow;
 	private ArrayList<Point> points;
 	private Color windowColor;
@@ -83,6 +86,28 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 				g.dispose();
 				this.myWindow.getDoodlePanel().repaint();
 			}
+			break;
+			
+		case 3:
+			this.points.add(new Point(e.getX(), e.getY()));
+			if (this.points.size() > 0) {
+				int layerNumber = this.myWindow.getCurrentLayer();
+				BufferedImage img = this.myWindow.getDoodlePanel().getLayers().get(layerNumber);
+				Graphics2D g = img.createGraphics();
+				
+			    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);	
+			    g.setColor(this.myWindow.getColor());
+				g.setStroke(new BasicStroke(this.myWindow.getStrokeSize())); //?
+			    g.drawString("HELLO?!?!?!!??!?", this.points.get(0).x, this.points.get(0).y);
+			    g.dispose();
+			    this.myWindow.getDoodlePanel().repaint();
+			}
+			break;
+			
+		case 5:	
+			setEndPoint(e.getX(), e.getY());
+
+			
 		}
 	}
 
@@ -107,6 +132,11 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
+		switch (this.myWindow.getToolType()) {
+		case 5:
+			setStartPoint(e.getX(), e.getY());
+			break;
+		}
 	}
 
 	@Override
@@ -134,6 +164,32 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			}
 			this.points.clear();
 			break;
+		case 3:
+			TextBoxInstruction textBoxInstr = new TextBoxInstruction(this.myWindow.getCurrentLayer(), 
+					this.points, this.myWindow.getClientId());
+			this.myWindow.sendInstruction(textBoxInstr);
+			System.out.println("SENT INSTR:");
+			System.out.println(textBoxInstr);
+			this.points.clear();
+			break;	
+		case 5:
+			setEndPoint(e.getX(), e.getY());
+			int layerNumber = this.myWindow.getCurrentLayer();
+			BufferedImage img = this.myWindow.getDoodlePanel().getLayers().get(layerNumber);
+			Graphics2D g = img.createGraphics();
+			
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setColor(this.myWindow.getColor());
+			g.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
+			RectangleInstruction rect = new RectangleInstruction(this.myWindow.getColor(), this.myWindow.getStrokeSize(), this.myWindow.getCurrentLayer(), this.x1, this.y1, this.x2, this.y2, this.myWindow.getClientId());
+			this.myWindow.sendInstruction(rect);
+			System.out.println("SENT INSTR:");
+			System.out.println(rect);
+			
+			g.drawRect(Math.min(this.x1,this.x2), Math.min(this.y1,this.y2), Math.abs(this.x1-this.x2), Math.abs(this.y1-this.y2));
+			this.myWindow.getDoodlePanel().repaint();
+			g.dispose();
+			
 		default:
 		}
 
@@ -150,5 +206,16 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void setStartPoint(int x, int y) {
+        this.x1 = x;
+        this.y1 = y;
+    }
+	
+	public void setEndPoint(int x, int y) { 
+		this.x2 = x;
+        this.y2 = y;
+    }
+	
 
 }
