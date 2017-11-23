@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import gui.PaintWindow;
 import model.BrushInstruction;
 import model.BucketInstruction;
+import model.CircleInstruction;
 import model.EraserInstruction;
 import model.RectangleInstruction;
 import model.TextBoxInstruction;
@@ -106,6 +107,9 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			
 		case 5:	
 			setEndPoint(e.getX(), e.getY());
+			break;
+		case 6:	
+			setEndPoint(e.getX(), e.getY());
 
 			
 		}
@@ -134,6 +138,9 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 		// TODO Auto-generated method stub
 		switch (this.myWindow.getToolType()) {
 		case 5:
+			setStartPoint(e.getX(), e.getY());
+			break;
+		case 6:
 			setStartPoint(e.getX(), e.getY());
 			break;
 		}
@@ -189,6 +196,24 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			g.drawRect(Math.min(this.x1,this.x2), Math.min(this.y1,this.y2), Math.abs(this.x1-this.x2), Math.abs(this.y1-this.y2));
 			this.myWindow.getDoodlePanel().repaint();
 			g.dispose();
+			break;
+		case 6:
+			setEndPoint(e.getX(), e.getY());
+			int layerNumber_ = this.myWindow.getCurrentLayer();
+			BufferedImage img_ = this.myWindow.getDoodlePanel().getLayers().get(layerNumber_);
+			Graphics2D g_ = img_.createGraphics();
+			
+			g_.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g_.setColor(this.myWindow.getColor());
+			g_.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
+			CircleInstruction circle = new CircleInstruction(this.myWindow.getColor(), this.myWindow.getStrokeSize(), this.myWindow.getCurrentLayer(), this.x1, this.y1, this.x2, this.y2, this.myWindow.getClientId());
+			this.myWindow.sendInstruction(circle);
+			System.out.println("SENT INSTR:");
+			System.out.println(circle);
+			
+			g_.drawOval(Math.min(this.x1,this.x2), Math.min(this.y1,this.y2), Math.abs(this.x1-this.x2), Math.abs(this.y1-this.y2));
+			this.myWindow.getDoodlePanel().repaint();
+			g_.dispose();
 			
 		default:
 		}

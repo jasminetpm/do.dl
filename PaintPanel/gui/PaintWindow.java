@@ -122,7 +122,7 @@ public class PaintWindow extends JFrame {
 		for (int i = 0; i < toolbarButtons.length; i++)
 		{
 			toolbarButtons[i] = new JButton(TOOL_LIST[i]);
-			if (i < 6) {
+			if (i < 7) {
 				toolbarButtons[i].addActionListener(new ToolSelectorListener(i, this));
 			}
 			this.toolbar.add(toolbarButtons[i]);
