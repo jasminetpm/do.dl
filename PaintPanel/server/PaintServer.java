@@ -110,7 +110,6 @@ public class PaintServer {
 	
 	public static void main(String args[]) throws Exception {
 		PaintServer serv = new PaintServer(9873);
-		
 		System.out.println("Accepting clients...");
 		serv.acceptClientLoop();
 	}

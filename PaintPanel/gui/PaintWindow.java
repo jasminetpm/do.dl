@@ -28,6 +28,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.AbstractSpinnerModel;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 
@@ -50,7 +52,7 @@ public class PaintWindow extends JFrame {
 	private JColorChooser jcc;
 	private JDialog colorDialog;
 	// Tool buttons
-	private JButton[] toolbarButtons = new JButton[8];
+	private JButton[] toolbarButtons = new JButton[10];
 	private JButton colorButton;
 	private JSpinner strokeSizeSelector;
 	private JSpinner layerSelector;
@@ -73,10 +75,13 @@ public class PaintWindow extends JFrame {
 	private ImageIcon text = new ImageIcon("PaintPanel/imagesource/ic_text_fields_black_24dp_1x.png");
 	private ImageIcon comment = new ImageIcon("PaintPanel/imagesource/ic_comment_black_24dp_1x.png");
 	private ImageIcon undo = new ImageIcon("PaintPanel/imagesource/ic_undo_black_24dp_1x.png");
-	private ImageIcon upload = new ImageIcon("PaintPanel/imagesource/ic_file_upload_black_24dp_1x.png");
+	private ImageIcon upload = new ImageIcon("PaintPanel/imagesource/ic_wallpaper_black_24dp_1x.png");
 	private ImageIcon download = new ImageIcon("PaintPanel/imagesource/ic_file_download_black_24dp_1x.png");
-	private ImageIcon bucket = new ImageIcon("PaintPanel/imagesource/ic_format_color_fill_black_48dp_1x.png"); // double resolution
-	private final ImageIcon[] TOOL_LIST = { brush, eraser, bucket, text, comment, undo, upload, download };
+	private ImageIcon bucket = new ImageIcon("PaintPanel/imagesource/ic_format_color_fill_black_24dp_1x.png");
+	private ImageIcon rectangle = new ImageIcon("PaintPanel/imagesource/ic_crop_5_4_black_24dp_1x.png");
+	private ImageIcon oval = new ImageIcon("PaintPanel/imagesource/ic_panorama_fish_eye_black_24dp_1x.png");
+	private final ImageIcon[] TOOL_LIST = { brush, eraser, oval, rectangle, bucket, 
+			                                text, comment, upload, download, undo};
 	// Component icons
 	private Icon layerIcon = new ImageIcon("PaintPanel/imagesource/ic_layers_black_24dp_1x.png");
 	private Icon strokeSizeIcon = new ImageIcon("PaintPanel/imagesource/ic_line_weight_black_24dp_1x.png");
@@ -120,16 +125,20 @@ public class PaintWindow extends JFrame {
 	private void populateToolbar()
 	{
 		// Setting toolbar buttons
-		this.toolbar.setLayout(new GridLayout(0, 1));
+		this.toolbar.setLayout(new BoxLayout(this.toolbar, BoxLayout.PAGE_AXIS));
 		this.toolbar.setBackground(Color.WHITE);
-		for (int i = 0; i < toolbarButtons.length; i++)
+		JPanel toolButtonSection = new JPanel(new GridLayout(0, 2));
+		toolButtonSection.setBackground(Color.WHITE);
+		for (int i = 0; i < TOOL_LIST.length; i++)
 		{
-			toolbarButtons[i] = new JButton(resizeIcon(TOOL_LIST[i], 24, 24));
-			if (i < 3) {
+			toolbarButtons[i] = new JButton(TOOL_LIST[i]);
+			if (i < 6) {
 				toolbarButtons[i].addActionListener(new ToolSelectorListener(i, this));
 			}
-			this.toolbar.add(toolbarButtons[i]);
+			toolButtonSection.add(toolbarButtons[i]);
 		}
+		this.toolbar.add(toolButtonSection);
+		
 		// Setting color chooser
 		JPanel colorSection = new JPanel(new BorderLayout());
 		colorSection.setBackground(Color.WHITE);
@@ -139,6 +148,7 @@ public class PaintWindow extends JFrame {
 		colorSection.add(this.colorButton, BorderLayout.CENTER);
 		//colorSection.add(this.colorLabel, BorderLayout.LINE_START);
 		this.toolbar.add(colorSection);
+		this.toolbar.add(Box.createRigidArea(new Dimension(0, 120))); // Adding filler
 		// Setting layer selector
 		JPanel layerToolSection = new JPanel(new BorderLayout());
 		layerToolSection.setBackground(Color.WHITE);
@@ -157,6 +167,7 @@ public class PaintWindow extends JFrame {
 		this.toolbar.add(strokeSizeSection);
 	}
 	
+	// Currently unimplemented -- to be used to scale icons to standard resolution
 	private static Icon resizeIcon(ImageIcon icon, int newWidth, int newHeight)
 	{
 		Image img = icon.getImage();
