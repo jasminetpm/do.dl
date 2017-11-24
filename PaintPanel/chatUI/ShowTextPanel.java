@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.text.DefaultCaret;
 
 import chatUI.MainWindow;
 
@@ -22,6 +23,8 @@ public class ShowTextPanel extends JPanel
 		this.text = new JTextArea();
 		this.text.setFont(new Font("Monaco", Font.PLAIN, 12));
 		this.text.setEditable(false);
+		DefaultCaret caret = (DefaultCaret) this.text.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 //		this.text.setText("test");
 		this.jsp = new JScrollPane(text);
 		this.jsp.setPreferredSize(new Dimension(260, 470));
