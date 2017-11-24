@@ -3,6 +3,7 @@ package chatUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -34,6 +35,7 @@ public class SendTextPanel extends JPanel
 		this.setLayout(new BorderLayout());
 		this.sendButton = new JButton(sendIcon);
 		this.jta = new JTextArea();
+		this.jta.setFont(new Font("Monaco", Font.PLAIN, 12));
 		this.jta.setLineWrap(true);
 		this.paneScroll = new JScrollPane(this.jta);
 		this.paneScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED); 

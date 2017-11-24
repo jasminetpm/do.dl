@@ -1,6 +1,7 @@
 package chatUI;
 
 import java.awt.Dimension;
+import java.awt.Font;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -8,7 +9,6 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
 import chatUI.MainWindow;
-import javafx.scene.paint.Color;
 
 public class ShowTextPanel extends JPanel 
 {
@@ -20,6 +20,7 @@ public class ShowTextPanel extends JPanel
 		// TODO Auto-generated constructor stub
 		this.mw = mw;
 		this.text = new JTextArea();
+		this.text.setFont(new Font("Monaco", Font.PLAIN, 12));
 		this.text.setEditable(false);
 //		this.text.setText("test");
 		this.jsp = new JScrollPane(text);
