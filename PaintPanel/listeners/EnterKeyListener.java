@@ -20,17 +20,17 @@ public class EnterKeyListener implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ENTER){
+		if(e.getKeyCode() == KeyEvent.VK_ENTER)
+		{
 			String message = this.jta.getText();
 			System.out.println(message);
-			try {
+			try 
+			{
 				new SendString(this.mw, message);
 			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			this.jta.setText(null);
-			this.jta.repaint();
+
 			this.mw.getSTP().textAdded(message);
 			this.mw.incrementMessageCounter();
 			this.mw.updateMyLastWords(message);
@@ -46,8 +46,11 @@ public class EnterKeyListener implements KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		if (e.getKeyCode() == KeyEvent.VK_ENTER)
+		{
+			this.jta.setText(null);
+			this.jta.repaint();
+		}
 	}
 
 }

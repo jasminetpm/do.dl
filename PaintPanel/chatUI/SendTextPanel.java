@@ -13,6 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import com.sun.xml.internal.txw2.Document;
 
@@ -37,11 +40,10 @@ public class SendTextPanel extends JPanel
 		this.jta = new JTextArea();
 		this.jta.setFont(new Font("Monaco", Font.PLAIN, 12));
 		this.jta.setLineWrap(true);
-		this.paneScroll = new JScrollPane(this.jta);
+		this.paneScroll = new JScrollPane(jta);
+		
 		this.paneScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED); 
 		this.paneScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		this.jta.setMaximumSize(new Dimension(200, 20));
-		this.jta.setPreferredSize(new Dimension(200, 20));
 
 		this.jta.requestFocus();
 		this.sendButton.addActionListener(new SendButtonListener(this.mw, this.jta));

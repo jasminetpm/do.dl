@@ -222,12 +222,12 @@ public class PaintWindow extends JFrame {
 	
 	public void setColorChooserIcon()
 	{
-		BufferedImage colorBox = new BufferedImage(25, // Dimensions hard coded
-											  	  25,
+		BufferedImage colorBox = new BufferedImage(40, // Dimensions hard coded
+											  	  40,
 											  	  BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = colorBox.createGraphics();
 		g.setColor(this.currentColor);
-		g.fillRect(0, 0, 25, 25);
+		g.fillRect(0, 0, 60, 60);
 		this.colorButton.setIcon(new ImageIcon(colorBox));
 	}
 	
