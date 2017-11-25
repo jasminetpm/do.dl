@@ -22,20 +22,34 @@ public class EnterKeyListener implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_ENTER)
 		{
-			String message = this.jta.getText();
-			System.out.println(message);
-			try 
+			try
 			{
-				new SendString(this.mw, message);
-			} catch (UnsupportedEncodingException e1) {
-				e1.printStackTrace();
+				String message = this.jta.getText();
+				checkMessage(message);
+				try 
+				{
+					new SendString(this.mw, message);
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				}
+				this.mw.getSTP().textAdded(message);
+				this.mw.incrementMessageCounter();
+				this.mw.updateMyLastWords(message);
+			} catch (NullPointerException ex)
+			{
+				System.err.println("Can't send empty message");
 			}
-
-			this.mw.getSTP().textAdded(message);
-			this.mw.incrementMessageCounter();
-			this.mw.updateMyLastWords(message);
+			
 		}
 		
+	}
+	
+	public void checkMessage(String input) throws NullPointerException
+	{
+		if (input.equals(""))
+		{
+			throw new NullPointerException();
+		}
 	}
 
 	@Override

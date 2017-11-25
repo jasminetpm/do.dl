@@ -63,5 +63,6 @@ public class SendTextPanel extends JPanel
 	{
 		return this.jta.getText();
 	}
+	
 
 }
