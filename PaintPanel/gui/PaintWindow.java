@@ -226,7 +226,7 @@ public class PaintWindow extends JFrame {
 	
 	public void setFontSize(int i)
 	{
-		this.strokeSize = i;
+		this.fontSize = i;
 	}
 	
 	public int getStrokeSize()

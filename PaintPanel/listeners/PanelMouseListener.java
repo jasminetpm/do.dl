@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
 import gui.PaintWindow;
 import model.BrushInstruction;
 import model.BucketInstruction;
@@ -32,6 +35,8 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 	private int x1, y1, x2, y2;
 	private PaintWindow myWindow;
 	private ArrayList<Point> points;
+	private Point textLocation;
+	private String textInput;
 	private Color windowColor;
 
 	public PanelMouseListener(PaintWindow pw) {
@@ -98,23 +103,6 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			setEndPoint(e.getX(), e.getY());
 			break;
 			
-		case 5: // Text
-			this.points.add(new Point(e.getX(), e.getY()));
-			if (this.points.size() > 0) {
-				int layerNumber = this.myWindow.getCurrentLayer();
-				BufferedImage img = this.myWindow.getDoodlePanel().getDisplayLayers().get(layerNumber);
-				Graphics2D g = img.createGraphics();
-				
-			    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);	
-			    g.setColor(this.myWindow.getColor());
-			    g.setFont(new Font("Monaco", Font.PLAIN, this.myWindow.getFontSize()));
-				//g.setStroke(new BasicStroke(this.myWindow.getStrokeSize())); //?
-			    g.drawString("HELLO?!?!?!!??!?", this.points.get(0).x, this.points.get(0).y);
-			    g.dispose();
-			    this.myWindow.getDoodlePanel().repaint();
-			}
-			break;
-			
 		}
 	}
 
@@ -132,6 +120,31 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 					this.myWindow.getCurrentLayer(), this.myWindow.getClientId());
 			this.myWindow.getDoodlePanel().executeInstruction(bucketInstr);
 			this.myWindow.sendInstruction(bucketInstr);
+			break;
+			
+		case 5: // Text
+			int layerNumber = this.myWindow.getCurrentLayer();
+			BufferedImage img = this.myWindow.getDoodlePanel().getDisplayLayers().get(layerNumber);
+			Graphics2D g = img.createGraphics();
+			this.textLocation = new Point(e.getX(), e.getY());
+			this.textInput = (String) JOptionPane.showInputDialog(this.myWindow,
+					                                                "Enter text to print on doodle:",
+					                                                "Text tool",
+					                                                JOptionPane.PLAIN_MESSAGE,
+					                                                null, null, null);
+		    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);	
+		    g.setColor(this.myWindow.getColor());
+		    g.setFont(new Font("Monaco", Font.PLAIN, this.myWindow.getFontSize()));
+		    g.drawString(textInput, textLocation.x, textLocation.y);
+		    
+		    TextBoxInstruction textBoxInstr = new TextBoxInstruction(g.getColor(), g.getFont(), this.textInput,
+		    	                                                         this.myWindow.getCurrentLayer(), this.textLocation, this.myWindow.getClientId());
+			this.myWindow.sendInstruction(textBoxInstr);
+			this.myWindow.getDoodlePanel().addInstruction(textBoxInstr);
+			System.out.println("SENT INSTR:");
+			System.out.println(textBoxInstr);
+		    g.dispose();
+		    this.myWindow.getDoodlePanel().repaint();
 			break;
 			
 		case 9: // Undo
@@ -227,15 +240,14 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			g.dispose();
 			break;
 			
-		case 5: // Text
-			TextBoxInstruction textBoxInstr = new TextBoxInstruction(this.myWindow.getCurrentLayer(), 
-					this.points, this.myWindow.getClientId());
-			this.myWindow.sendInstruction(textBoxInstr);
-			this.myWindow.getDoodlePanel().addInstruction(textBoxInstr);
-			System.out.println("SENT INSTR:");
-			System.out.println(textBoxInstr);
-			this.points.clear();
-			break;	
+//		case 5: // Text
+//			TextBoxInstruction textBoxInstr = new TextBoxInstruction(this.myWindow.getColor(), this.myWindow.getFont(), this.textInput,
+//					                                                 this.myWindow.getCurrentLayer(), this.textLocation, this.myWindow.getClientId());
+//			this.myWindow.sendInstruction(textBoxInstr);
+//			this.myWindow.getDoodlePanel().addInstruction(textBoxInstr);
+//			System.out.println("SENT INSTR:");
+//			System.out.println(textBoxInstr);
+//			break;	
 		
 		}
 
@@ -262,6 +274,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 		this.x2 = x;
         this.y2 = y;
     }
+	
 	
 
 }
