@@ -40,6 +40,7 @@ import listeners.ColorPickerListener;
 import listeners.LayerSelectorListener;
 import listeners.StrokeSizeListener;
 import listeners.ToolSelectorListener;
+import model.CanvasState;
 import model.Instruction;
 import model.UndoInstruction;
 
@@ -303,6 +304,9 @@ public class PaintWindow extends JFrame {
 					if (message instanceof Integer) {
 						System.out.println("Got ID: " + message);
 						PaintWindow.clientId = ((Integer) message).intValue();
+					} else if (message instanceof CanvasState) {
+						System.out.println("Received canvas state!");
+						PaintWindow.paintPanel.updateState((CanvasState) message);
 					} else {
 						Instruction instr = (Instruction) message;
 						if (instr instanceof UndoInstruction) {
