@@ -140,7 +140,9 @@ public class DoodlePanel extends JPanel {
 	public BufferedImage mergeARGBLayers(ArrayList<BufferedImage> layers)
 	{
 		BufferedImage mergedImage = new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB);
-		Graphics g = mergedImage.getGraphics();
+		Graphics2D g = mergedImage.createGraphics();
+		g.setBackground(Color.WHITE); // Forces background to be white
+		g.clearRect(0, 0, 650, 540);
 		for (int i = 0; i < layers.size(); i++)
 		{
 			g.drawImage(layers.get(i), 0, 0, null);
@@ -151,7 +153,9 @@ public class DoodlePanel extends JPanel {
 	public BufferedImage mergeRGBLayers(ArrayList<BufferedImage> layers)
 	{
 		BufferedImage mergedImage = new BufferedImage(650, 540, BufferedImage.TYPE_INT_RGB);
-		Graphics g = mergedImage.getGraphics();
+		Graphics2D g = mergedImage.createGraphics();
+		g.setColor(Color.WHITE); // Forces background to be white
+		g.fillRect(0, 0, 650, 540);
 		for (int i = 0; i < layers.size(); i++)
 		{
 			g.drawImage(layers.get(i), 0, 0, null);

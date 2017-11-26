@@ -75,7 +75,7 @@ public class PaintWindow extends JFrame {
 			                                                       1);
 	private SpinnerNumberModel strokeValues = new SpinnerNumberModel(5,
 			                                                         1, // minimum value
-			                                                         10, // maximum value
+			                                                         20, // maximum value
 			                                                         1); // step value
 	private SpinnerNumberModel layerValues = new SpinnerNumberModel(1,
                                                                     1, // minimum value
@@ -169,7 +169,16 @@ public class PaintWindow extends JFrame {
 		colorSection.add(this.colorButton, BorderLayout.CENTER);
 		//colorSection.add(this.colorLabel, BorderLayout.LINE_START);
 		this.toolbar.add(colorSection);
-		this.toolbar.add(Box.createRigidArea(new Dimension(0, 120))); // Adding filler
+		// Adding filler
+		this.toolbar.add(Box.createRigidArea(new Dimension(0, 120))); 
+		// Setting stroke size selector
+		JPanel strokeSizeSection = new JPanel(new BorderLayout());
+		strokeSizeSection.setBackground(Color.WHITE);
+		this.strokeSizeSelector = new JSpinner(this.strokeValues);
+		this.strokeSizeSelector.addChangeListener(new StrokeSizeListener(this));
+		strokeSizeSection.add(this.strokeSizeSelector, BorderLayout.CENTER);
+		strokeSizeSection.add(this.strokeSizeLabel, BorderLayout.LINE_START);
+		this.toolbar.add(strokeSizeSection);
 		// Setting font size selector
 		JPanel fontSizeSection = new JPanel(new BorderLayout());
 		fontSizeSection.setBackground(Color.WHITE);
@@ -186,14 +195,6 @@ public class PaintWindow extends JFrame {
 		layerToolSection.add(this.layerSelector, BorderLayout.CENTER);
 		layerToolSection.add(this.layerLabel, BorderLayout.LINE_START);
 		this.toolbar.add(layerToolSection);
-		// Setting stroke size selector
-		JPanel strokeSizeSection = new JPanel(new BorderLayout());
-		strokeSizeSection.setBackground(Color.WHITE);
-		this.strokeSizeSelector = new JSpinner(this.strokeValues);
-		this.strokeSizeSelector.addChangeListener(new StrokeSizeListener(this));
-		strokeSizeSection.add(this.strokeSizeSelector, BorderLayout.CENTER);
-		strokeSizeSection.add(this.strokeSizeLabel, BorderLayout.LINE_START);
-		this.toolbar.add(strokeSizeSection);
 	}
 	
 	// Currently unimplemented -- to be used to scale icons to standard resolution

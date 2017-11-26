@@ -183,6 +183,11 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 				System.out.println("Dialog cancelled.");
 			}
 			break;
+		
+//		case 7: // Upload picture
+//			BufferedImage bimg = this.myWindow.getDoodlePanel().getDisplayLayers().get(this.myWindow.getCurrentLayer());
+//			Graphics2D originalImg = bimg.createGraphics();
+//			this
 		}
 	}
 
