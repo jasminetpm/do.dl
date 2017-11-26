@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import javax.swing.JPanel;
 
 import listeners.PanelMouseListener;
+import model.CanvasState;
 import model.Instruction;
 
 public class DoodlePanel extends JPanel {
@@ -59,6 +60,29 @@ public class DoodlePanel extends JPanel {
 		}
 	}
 	
+	public void updateState(CanvasState currentState) {
+		ArrayList<BufferedImage> _displayLayers = new ArrayList<BufferedImage>();
+		
+		// get the information from the state object
+		this.instructionLog = currentState.getLog();
+		this.baseLayers = currentState.getLayers();
+
+		// copy the base layers
+		for (BufferedImage img : this.baseLayers) {
+			_displayLayers.add(this.deepCopy(img));
+		}
+		
+		// reconstruct the display layers by executing the instructions on them
+		for (Instruction instr : this.instructionLog) {
+			System.out.println(instr);
+			instr.execute(_displayLayers);
+		}
+		
+		// set display layers to new display layers, and redraw
+		this.displayLayers = _displayLayers;
+		this.repaint();
+	}
+	
 	public void undo() {
 		ArrayList<BufferedImage> _displayLayers = new ArrayList<BufferedImage>();
 		BufferedImage test;
@@ -66,13 +90,11 @@ public class DoodlePanel extends JPanel {
 		// only undo if there are instructions in the log
 		if (this.instructionLog.size() > 0) {
 			// copy the base layers
-			System.out.println("Hello 1");
 			for (BufferedImage img : this.baseLayers) {
 				_displayLayers.add(this.deepCopy(img));
 			}
 			
 			// remove the last stored instruction
-			System.out.println("Hello 2");
 			this.instructionLog.removeLast();
 			
 			// reconstruct the display layers by executing the instructions on them
@@ -82,9 +104,7 @@ public class DoodlePanel extends JPanel {
 			}
 			
 			// set display layers to new display layers, and redraw
-			System.out.println("Hello 4");
 			this.displayLayers = _displayLayers;
-			System.out.println("Hello 5");
 			this.repaint();
 		} else {
 			System.out.println("Instruction log is empty!");
@@ -101,7 +121,7 @@ public class DoodlePanel extends JPanel {
 		this.instructionLog.add(instr);
 		if (this.instructionLog.size() > 20) {
 			poppedInstr = this.instructionLog.removeFirst();
-			poppedInstr.execute(baseLayers);
+			poppedInstr.execute(this.baseLayers);
 		}
 		
 		this.repaint();
