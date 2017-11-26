@@ -252,7 +252,7 @@ public class PaintWindow extends JFrame {
 			{
 				File pngFile = new File(selectedFile.getAbsolutePath() + ".png");
 				try {
-				ImageIO.write(this.getDoodlePanel().mergeLayers(this.getDoodlePanel().getDisplayLayers()), 
+				ImageIO.write(this.getDoodlePanel().mergeARGBLayers(this.getDoodlePanel().getDisplayLayers()), 
 						      "PNG", pngFile);
 				} catch (IOException e) {
 				e.printStackTrace();
@@ -261,7 +261,7 @@ public class PaintWindow extends JFrame {
 			{
 				File jpgFile = new File(selectedFile.getAbsolutePath() + ".jpg");
 				try {
-					ImageIO.write(this.getDoodlePanel().mergeLayers(this.getDoodlePanel().getDisplayLayers()), 
+					ImageIO.write(this.getDoodlePanel().mergeRGBLayers(this.getDoodlePanel().getDisplayLayers()), 
 							      "JPG", jpgFile);
 					} catch (IOException e) {
 					e.printStackTrace();
@@ -270,7 +270,7 @@ public class PaintWindow extends JFrame {
 			{
 				File gifFile = new File(selectedFile.getAbsolutePath() + ".gif");
 				try {
-					ImageIO.write(this.getDoodlePanel().mergeLayers(this.getDoodlePanel().getDisplayLayers()), 
+					ImageIO.write(this.getDoodlePanel().mergeARGBLayers(this.getDoodlePanel().getDisplayLayers()), 
 							      "GIF", gifFile);
 					} catch (IOException e) {
 					e.printStackTrace();

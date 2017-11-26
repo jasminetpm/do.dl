@@ -137,9 +137,20 @@ public class DoodlePanel extends JPanel {
 		this.repaint();
 	}
 	
-	public BufferedImage mergeLayers(ArrayList<BufferedImage> layers)
+	public BufferedImage mergeARGBLayers(ArrayList<BufferedImage> layers)
 	{
 		BufferedImage mergedImage = new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB);
+		Graphics g = mergedImage.getGraphics();
+		for (int i = 0; i < layers.size(); i++)
+		{
+			g.drawImage(layers.get(i), 0, 0, null);
+		}
+		return mergedImage;
+	}
+	
+	public BufferedImage mergeRGBLayers(ArrayList<BufferedImage> layers)
+	{
+		BufferedImage mergedImage = new BufferedImage(650, 540, BufferedImage.TYPE_INT_RGB);
 		Graphics g = mergedImage.getGraphics();
 		for (int i = 0; i < layers.size(); i++)
 		{
