@@ -10,9 +10,9 @@ public class ChatServerClientThread extends Thread{
 	private ChatServerReadingThread reading;
 	private PrintWriter pw;
 	private BufferedReader br;
-	private ChatServer server;
+	private PaintServer server;
 
-	public ChatServerClientThread(Socket c, ChatServer server)
+	public ChatServerClientThread(Socket c, PaintServer server)
 	{
 		this.client = c;
 		this.server = server;
@@ -28,9 +28,6 @@ public class ChatServerClientThread extends Thread{
 
 	}
 	
-	
-
-
 	@Override
 	public void run()
 	{
@@ -59,7 +56,7 @@ public class ChatServerClientThread extends Thread{
 		this.pw.flush();
 	}
 	
-	public ChatServer getServer()
+	public PaintServer getServer()
 	{
 		return this.server;
 	}

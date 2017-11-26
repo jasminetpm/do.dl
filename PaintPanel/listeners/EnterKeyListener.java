@@ -20,22 +20,36 @@ public class EnterKeyListener implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ENTER){
-			String message = this.jta.getText();
-			System.out.println(message);
-			try {
-				new SendString(this.mw, message);
-			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+		if(e.getKeyCode() == KeyEvent.VK_ENTER)
+		{
+			try
+			{
+				String message = this.jta.getText();
+				checkMessage(message);
+				try 
+				{
+					new SendString(this.mw, message);
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				}
+				this.mw.getSTP().textAdded(message);
+				this.mw.incrementMessageCounter();
+				this.mw.updateMyLastWords(message);
+			} catch (NullPointerException ex)
+			{
+				System.err.println("Can't send empty message");
 			}
-			this.jta.setText(null);
-			this.jta.repaint();
-			this.mw.getSTP().textAdded(message);
-			this.mw.incrementMessageCounter();
-			this.mw.updateMyLastWords(message);
+			
 		}
 		
+	}
+	
+	public void checkMessage(String input) throws NullPointerException
+	{
+		if (input.equals(""))
+		{
+			throw new NullPointerException();
+		}
 	}
 
 	@Override
@@ -46,8 +60,11 @@ public class EnterKeyListener implements KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		if (e.getKeyCode() == KeyEvent.VK_ENTER)
+		{
+			this.jta.setText(null);
+			this.jta.repaint();
+		}
 	}
 
 }

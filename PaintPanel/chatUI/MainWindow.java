@@ -1,16 +1,20 @@
 package chatUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 import client.MyClient;
-import controller.SetPort;
 
 
 public class MainWindow extends JPanel
@@ -29,26 +33,28 @@ public class MainWindow extends JPanel
 	private MyClient mc;
 	private String ip;
 	
-	public MainWindow(String ip) throws UnknownHostException, IOException, InterruptedException
+	
+	public MainWindow(String ip, int port) throws UnknownHostException, IOException, InterruptedException
 	{
 		this.ip = ip;
-		this.mc = new MyClient(ip, SetPort.port, this);
+		this.mc = new MyClient(ip, port, this);
 		this.mc.start();
 		
-		this.tp = new TitlePanel(this);
+		//this.tp = new TitlePanel(this);
 		this.showp = new ShowTextPanel(this);
 		this.sendp = new SendTextPanel(this);
 		
-		this.setLayout(new BorderLayout());
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
-		this.add(this.tp, BorderLayout.PAGE_START);
-		this.add(this.showp, BorderLayout.CENTER);
-		this.add(this.sendp,BorderLayout.PAGE_END);
+		//this.add(this.tp, BorderLayout.PAGE_START);
+		this.add(this.showp);
+		this.add(this.sendp);
 		
 		this.chooseUserName = new JOptionPane("User Name");
 		this.userName = this.chooseUserName.showInputDialog("Please name yourself:");
 		this.name = this.userName;
 		
+		this.setBorder(BorderFactory.createEmptyBorder(1, 5, 1, 1));
 		this.setPreferredSize(new Dimension(260, 540));
 	}
 	
