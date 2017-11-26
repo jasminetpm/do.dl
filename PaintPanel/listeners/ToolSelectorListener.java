@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import gui.PaintWindow;
+import model.UndoInstruction;
 
 public class ToolSelectorListener implements ActionListener {
 	private int toolId;
@@ -17,7 +18,13 @@ public class ToolSelectorListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("Switched to type: " + this.toolId);
-		this.pw.setToolType(this.toolId);
+		if (this.toolId < 8) {
+			this.pw.setToolType(this.toolId);
+		} else if (this.toolId == 9) {
+			// undo
+			this.pw.getDoodlePanel().undo();
+			this.pw.sendInstruction(new UndoInstruction(this.pw.getClientId()));
+		}
 	}
 
 }

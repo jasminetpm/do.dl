@@ -45,7 +45,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			this.points.add(new Point(e.getX(), e.getY()));
 			if (this.points.size() > 0) {
 				int layerNumber = this.myWindow.getCurrentLayer();
-				BufferedImage img = this.myWindow.getDoodlePanel().getLayers().get(layerNumber);
+				BufferedImage img = this.myWindow.getDoodlePanel().getDisplayLayers().get(layerNumber);
 				Graphics2D g = img.createGraphics();
 
 				g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -68,7 +68,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			this.points.add(new Point(e.getX(), e.getY()));
 			if (this.points.size() > 0) {
 				int layerNumber = this.myWindow.getCurrentLayer();
-				BufferedImage img = this.myWindow.getDoodlePanel().getLayers().get(layerNumber);
+				BufferedImage img = this.myWindow.getDoodlePanel().getDisplayLayers().get(layerNumber);
 				Graphics2D g = img.createGraphics();
 
 				g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -101,7 +101,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			this.points.add(new Point(e.getX(), e.getY()));
 			if (this.points.size() > 0) {
 				int layerNumber = this.myWindow.getCurrentLayer();
-				BufferedImage img = this.myWindow.getDoodlePanel().getLayers().get(layerNumber);
+				BufferedImage img = this.myWindow.getDoodlePanel().getDisplayLayers().get(layerNumber);
 				Graphics2D g = img.createGraphics();
 				
 			    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);	
@@ -131,6 +131,10 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			this.myWindow.getDoodlePanel().executeInstruction(bucketInstr);
 			this.myWindow.sendInstruction(bucketInstr);
 			break;
+			
+		case 9: // Undo
+			this.myWindow.getDoodlePanel().undo();
+			break;
 		}
 	}
 
@@ -151,9 +155,14 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 		switch (this.myWindow.getToolType()) {
 		case 0: // Brush
 			if (this.points.size() >= 1) {
+				ArrayList<Point> pointsDeepCopy = new ArrayList<Point>();
+				for (Point p : this.points) {
+					pointsDeepCopy.add((Point) p.clone());
+				}
 				BrushInstruction brushInstr = new BrushInstruction(this.myWindow.getColor(),
-						this.myWindow.getStrokeSize(), this.myWindow.getCurrentLayer(), this.points,
+						this.myWindow.getStrokeSize(), this.myWindow.getCurrentLayer(), pointsDeepCopy,
 						this.myWindow.getClientId());
+				this.myWindow.getDoodlePanel().addInstruction(brushInstr);
 				this.myWindow.sendInstruction(brushInstr);
 				System.out.println("SENT INSTR:");
 				System.out.println(brushInstr);
@@ -161,10 +170,15 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			this.points.clear();
 			break;
 		case 1: // Eraser
+			ArrayList<Point> pointsDeepCopy = new ArrayList<Point>();
+			for (Point p : this.points) {
+				pointsDeepCopy.add((Point) p.clone());
+			}
 			if (this.points.size() >= 1) {
 				EraserInstruction eraserInstr = new EraserInstruction(this.myWindow.getStrokeSize(),
-						this.myWindow.getCurrentLayer(), this.points, this.myWindow.getClientId());
+						this.myWindow.getCurrentLayer(), pointsDeepCopy, this.myWindow.getClientId());
 				this.myWindow.sendInstruction(eraserInstr);
+				this.myWindow.getDoodlePanel().addInstruction(eraserInstr);
 				System.out.println("SENT INSTR:");
 				System.out.println(eraserInstr);
 			}
@@ -174,7 +188,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 		case 2: // Draw oval
 			setEndPoint(e.getX(), e.getY());
 			int layerNumber_ = this.myWindow.getCurrentLayer();
-			BufferedImage img_ = this.myWindow.getDoodlePanel().getLayers().get(layerNumber_);
+			BufferedImage img_ = this.myWindow.getDoodlePanel().getDisplayLayers().get(layerNumber_);
 			Graphics2D g_ = img_.createGraphics();
 			
 			g_.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -182,6 +196,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			g_.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
 			CircleInstruction circle = new CircleInstruction(this.myWindow.getColor(), this.myWindow.getStrokeSize(), this.myWindow.getCurrentLayer(), this.x1, this.y1, this.x2, this.y2, this.myWindow.getClientId());
 			this.myWindow.sendInstruction(circle);
+			this.myWindow.getDoodlePanel().addInstruction(circle);
 			System.out.println("SENT INSTR:");
 			System.out.println(circle);
 			
@@ -193,7 +208,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 		case 3: // Draw rectangle
 			setEndPoint(e.getX(), e.getY());
 			int layerNumber = this.myWindow.getCurrentLayer();
-			BufferedImage img = this.myWindow.getDoodlePanel().getLayers().get(layerNumber);
+			BufferedImage img = this.myWindow.getDoodlePanel().getDisplayLayers().get(layerNumber);
 			Graphics2D g = img.createGraphics();
 			
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -201,6 +216,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			g.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
 			RectangleInstruction rect = new RectangleInstruction(this.myWindow.getColor(), this.myWindow.getStrokeSize(), this.myWindow.getCurrentLayer(), this.x1, this.y1, this.x2, this.y2, this.myWindow.getClientId());
 			this.myWindow.sendInstruction(rect);
+			this.myWindow.getDoodlePanel().addInstruction(rect);
 			System.out.println("SENT INSTR:");
 			System.out.println(rect);
 			
@@ -213,6 +229,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			TextBoxInstruction textBoxInstr = new TextBoxInstruction(this.myWindow.getCurrentLayer(), 
 					this.points, this.myWindow.getClientId());
 			this.myWindow.sendInstruction(textBoxInstr);
+			this.myWindow.getDoodlePanel().addInstruction(textBoxInstr);
 			System.out.println("SENT INSTR:");
 			System.out.println(textBoxInstr);
 			this.points.clear();

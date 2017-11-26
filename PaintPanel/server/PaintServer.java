@@ -64,6 +64,7 @@ public class PaintServer {
 		
 		@Override
 		public void run() {
+			Object message;
 			try {
 				this.ois = new ObjectInputStream(this.is);
 				while(true) {

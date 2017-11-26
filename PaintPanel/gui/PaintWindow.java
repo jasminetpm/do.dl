@@ -41,6 +41,7 @@ import listeners.LayerSelectorListener;
 import listeners.StrokeSizeListener;
 import listeners.ToolSelectorListener;
 import model.Instruction;
+import model.UndoInstruction;
 
 public class PaintWindow extends JFrame {
 	// Panels
@@ -132,7 +133,7 @@ public class PaintWindow extends JFrame {
 		for (int i = 0; i < TOOL_LIST.length; i++)
 		{
 			toolbarButtons[i] = new JButton(TOOL_LIST[i]);
-			if (i < 6) {
+			if (i < 10) {
 				toolbarButtons[i].addActionListener(new ToolSelectorListener(i, this));
 			}
 			toolButtonSection.add(toolbarButtons[i]);
@@ -304,8 +305,14 @@ public class PaintWindow extends JFrame {
 						PaintWindow.clientId = ((Integer) message).intValue();
 					} else {
 						Instruction instr = (Instruction) message;
-						System.out.println("Received instruction:");
-						PaintWindow.paintPanel.executeInstruction(instr);							
+						if (instr instanceof UndoInstruction) {
+							System.out.println("Received instruction: undo");
+							PaintWindow.paintPanel.undo();
+						} else {
+							System.out.println("Received instruction:");
+							PaintWindow.paintPanel.executeInstruction(instr);	
+						}
+												
 					}
 				}
 			} catch (ClassNotFoundException | IOException e) {
