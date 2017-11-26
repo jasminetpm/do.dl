@@ -127,17 +127,19 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			BufferedImage img = this.myWindow.getDoodlePanel().getDisplayLayers().get(layerNumber);
 			Graphics2D g = img.createGraphics();
 			this.textLocation = new Point(e.getX(), e.getY());
+			try {
 			this.textInput = (String) JOptionPane.showInputDialog(this.myWindow,
-					                                                "Enter text to print on doodle:",
-					                                                "Text tool",
-					                                                JOptionPane.PLAIN_MESSAGE,
-					                                                null, null, null);
+                                                                  "Enter text to print on doodle:",
+                                                                  "Text tool",
+                                                                  JOptionPane.PLAIN_MESSAGE,
+                                                                  null, null, null);
+			
+			
 		    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);	
 		    g.setColor(this.myWindow.getColor());
 		    g.setFont(new Font("Monaco", Font.PLAIN, this.myWindow.getFontSize()));
-		    g.drawString(textInput, textLocation.x, textLocation.y);
-		    
-		    TextBoxInstruction textBoxInstr = new TextBoxInstruction(g.getColor(), g.getFont(), this.textInput,
+		    	g.drawString(textInput, textLocation.x, textLocation.y);
+		    	TextBoxInstruction textBoxInstr = new TextBoxInstruction(g.getColor(), g.getFont(), this.textInput,
 		    	                                                         this.myWindow.getCurrentLayer(), this.textLocation, this.myWindow.getClientId());
 			this.myWindow.sendInstruction(textBoxInstr);
 			this.myWindow.getDoodlePanel().addInstruction(textBoxInstr);
@@ -145,6 +147,9 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			System.out.println(textBoxInstr);
 		    g.dispose();
 		    this.myWindow.getDoodlePanel().repaint();
+		    } catch (NullPointerException er) {
+				System.out.println("Dialog cancelled.");
+			}
 			break;
 			
 		case 9: // Undo
