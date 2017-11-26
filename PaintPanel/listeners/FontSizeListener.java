@@ -6,19 +6,20 @@ import javax.swing.event.ChangeListener;
 
 import gui.PaintWindow;
 
-public class StrokeSizeListener implements ChangeListener {
-	private PaintWindow pw;
+public class FontSizeListener implements ChangeListener {
 	
-	public StrokeSizeListener(PaintWindow _pw) {
+	private PaintWindow pw;
+
+	public FontSizeListener(PaintWindow _pw) {
 		this.pw = _pw;
 	}
-
+	
 	@Override
 	public void stateChanged(ChangeEvent e) 
 	{
 		JSpinner source = (JSpinner) e.getSource();
-		int size = (int) source.getValue();
-		this.pw.setStrokeSize(size);
+		int fontSize = (int) source.getValue();
+		this.pw.setFontSize(fontSize);
 	}
-
+	
 }

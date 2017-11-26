@@ -3,6 +3,7 @@ package listeners;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
@@ -106,7 +107,8 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 				
 			    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);	
 			    g.setColor(this.myWindow.getColor());
-				g.setStroke(new BasicStroke(this.myWindow.getStrokeSize())); //?
+			    g.setFont(new Font("Monaco", Font.PLAIN, this.myWindow.getFontSize()));
+				//g.setStroke(new BasicStroke(this.myWindow.getStrokeSize())); //?
 			    g.drawString("HELLO?!?!?!!??!?", this.points.get(0).x, this.points.get(0).y);
 			    g.dispose();
 			    this.myWindow.getDoodlePanel().repaint();

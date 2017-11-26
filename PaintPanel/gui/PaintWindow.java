@@ -37,6 +37,7 @@ import chatUI.MainWindow;
 import listeners.ColorCancelListener;
 import listeners.ColorOKListener;
 import listeners.ColorPickerListener;
+import listeners.FontSizeListener;
 import listeners.LayerSelectorListener;
 import listeners.StrokeSizeListener;
 import listeners.ToolSelectorListener;
@@ -55,9 +56,14 @@ public class PaintWindow extends JFrame {
 	// Tool buttons
 	private JButton[] toolbarButtons = new JButton[10];
 	private JButton colorButton;
+	private JSpinner fontSizeSelector;
 	private JSpinner strokeSizeSelector;
 	private JSpinner layerSelector;
 	// Default values
+	private SpinnerNumberModel fontValues = new SpinnerNumberModel(12,
+			                                                       1,
+			                                                       48,
+			                                                       1);
 	private SpinnerNumberModel strokeValues = new SpinnerNumberModel(5,
 			                                                         1, // minimum value
 			                                                         10, // maximum value
@@ -66,6 +72,7 @@ public class PaintWindow extends JFrame {
                                                                     1, // minimum value
                                                                     4, // maximum value
                                                                     1); // step value
+	private int fontSize = 12;
 	private int strokeSize = 5;
 	private int toolType = 0;
 	private int currentLayer = 0;
@@ -73,7 +80,7 @@ public class PaintWindow extends JFrame {
 	// Button icons
 	private ImageIcon brush = new ImageIcon("PaintPanel/imagesource/ic_brush_black_24dp_1x.png");
 	private ImageIcon eraser = new ImageIcon("PaintPanel/imagesource/double-sided-eraser.png");
-	private ImageIcon text = new ImageIcon("PaintPanel/imagesource/ic_text_fields_black_24dp_1x.png");
+	private ImageIcon text = new ImageIcon("PaintPanel/imagesource/ic_format_textdirection_l_to_r_black_24dp_1x.png");
 	private ImageIcon comment = new ImageIcon("PaintPanel/imagesource/ic_comment_black_24dp_1x.png");
 	private ImageIcon undo = new ImageIcon("PaintPanel/imagesource/ic_undo_black_24dp_1x.png");
 	private ImageIcon upload = new ImageIcon("PaintPanel/imagesource/ic_wallpaper_black_24dp_1x.png");
@@ -84,9 +91,11 @@ public class PaintWindow extends JFrame {
 	private final ImageIcon[] TOOL_LIST = { brush, eraser, oval, rectangle, bucket, 
 			                                text, comment, upload, download, undo};
 	// Component icons
+	private Icon fontSizeIcon = new ImageIcon("PaintPanel/imagesource/ic_text_fields_black_24dp_1x.png");
 	private Icon layerIcon = new ImageIcon("PaintPanel/imagesource/ic_layers_black_24dp_1x.png");
 	private Icon strokeSizeIcon = new ImageIcon("PaintPanel/imagesource/ic_line_weight_black_24dp_1x.png");
 	private Icon colorIcon = new ImageIcon("PaintPanel/imagesource/ic_color_lens_black_24dp_1x.png");
+	private JLabel fontSizeLabel = new JLabel(fontSizeIcon);
 	private JLabel layerLabel = new JLabel(layerIcon);
 	private JLabel strokeSizeLabel = new JLabel(strokeSizeIcon);
 	private JLabel colorLabel = new JLabel(colorIcon);
@@ -150,6 +159,14 @@ public class PaintWindow extends JFrame {
 		//colorSection.add(this.colorLabel, BorderLayout.LINE_START);
 		this.toolbar.add(colorSection);
 		this.toolbar.add(Box.createRigidArea(new Dimension(0, 120))); // Adding filler
+		// Setting font size selector
+		JPanel fontSizeSection = new JPanel(new BorderLayout());
+		fontSizeSection.setBackground(Color.WHITE);
+		this.fontSizeSelector = new JSpinner(this.fontValues);
+		this.fontSizeSelector.addChangeListener(new FontSizeListener(this));
+		fontSizeSection.add(this.fontSizeSelector, BorderLayout.CENTER);
+		fontSizeSection.add(this.fontSizeLabel, BorderLayout.LINE_START);
+		this.toolbar.add(fontSizeSection);
 		// Setting layer selector
 		JPanel layerToolSection = new JPanel(new BorderLayout());
 		layerToolSection.setBackground(Color.WHITE);
@@ -199,6 +216,16 @@ public class PaintWindow extends JFrame {
 	public void viewColorChooser()
 	{
 		this.colorDialog.setVisible(true);
+	}
+	
+	public int getFontSize()
+	{
+		return this.fontSize;
+	}
+	
+	public void setFontSize(int i)
+	{
+		this.strokeSize = i;
 	}
 	
 	public int getStrokeSize()
