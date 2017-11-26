@@ -97,10 +97,42 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			
 		case 2:	// Draw oval
 			setEndPoint(e.getX(), e.getY());
+			
+			// get the preview layer
+			BufferedImage previewLayer = this.myWindow.getDoodlePanel().getPreviewLayer();
+			Graphics2D g = previewLayer.createGraphics();
+			
+			// clear it
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setComposite(AlphaComposite.Src);
+			g.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
+			g.setColor(new Color(0,0,0,0));
+			g.fillRect(0, 0, previewLayer.getWidth(), previewLayer.getHeight());
+			
+			// draw the oval and repaint
+			g.setColor(this.myWindow.getColor());
+			g.drawOval(Math.min(this.x1,this.x2), Math.min(this.y1,this.y2), Math.abs(this.x1-this.x2), Math.abs(this.y1-this.y2));
+			this.myWindow.getDoodlePanel().repaint();
 			break;
 	
 		case 3: // Draw rectangle	
 			setEndPoint(e.getX(), e.getY());
+			
+			// get the preview layer
+			BufferedImage previewLayer1 = this.myWindow.getDoodlePanel().getPreviewLayer();
+			Graphics2D g1 = previewLayer1.createGraphics();
+			
+			// clear it
+			g1.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g1.setComposite(AlphaComposite.Src);
+			g1.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
+			g1.setColor(new Color(0,0,0,0));
+			g1.fillRect(0, 0, previewLayer1.getWidth(), previewLayer1.getHeight());
+			
+			// draw the rect and repaint
+			g1.setColor(this.myWindow.getColor());
+			g1.drawRect(Math.min(this.x1,this.x2), Math.min(this.y1,this.y2), Math.abs(this.x1-this.x2), Math.abs(this.y1-this.y2));
+			this.myWindow.getDoodlePanel().repaint();
 			break;
 			
 		}
@@ -145,10 +177,6 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			System.out.println(textBoxInstr);
 		    g.dispose();
 		    this.myWindow.getDoodlePanel().repaint();
-			break;
-			
-		case 9: // Undo
-			this.myWindow.getDoodlePanel().undo();
 			break;
 		}
 	}
@@ -201,6 +229,8 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			break;
 			
 		case 2: // Draw oval
+			this.myWindow.getDoodlePanel().clearPreviewLayer();
+			
 			setEndPoint(e.getX(), e.getY());
 			int layerNumber_ = this.myWindow.getCurrentLayer();
 			BufferedImage img_ = this.myWindow.getDoodlePanel().getDisplayLayers().get(layerNumber_);
@@ -221,6 +251,8 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			break;
 			
 		case 3: // Draw rectangle
+			this.myWindow.getDoodlePanel().clearPreviewLayer();
+			
 			setEndPoint(e.getX(), e.getY());
 			int layerNumber = this.myWindow.getCurrentLayer();
 			BufferedImage img = this.myWindow.getDoodlePanel().getDisplayLayers().get(layerNumber);

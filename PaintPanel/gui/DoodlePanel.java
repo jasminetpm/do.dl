@@ -22,6 +22,7 @@ public class DoodlePanel extends JPanel {
 	private ArrayList<BufferedImage> baseLayers;
 	private ArrayList<BufferedImage> displayLayers;
 	private LinkedList<Instruction> instructionLog;
+	private BufferedImage previewLayer;
 	
 	public DoodlePanel(PaintWindow pw)
 	{
@@ -36,6 +37,7 @@ public class DoodlePanel extends JPanel {
 			this.displayLayers.add(new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB));
 		}
 		this.instructionLog = new LinkedList<Instruction>();
+		this.previewLayer = new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB);
 		this.setBackground(Color.WHITE);
 		this.addMouseListener(pml);
 		this.addMouseMotionListener(pml);
@@ -47,6 +49,14 @@ public class DoodlePanel extends JPanel {
 	
 	public ArrayList<BufferedImage> getDisplayLayers() {
 		return this.displayLayers;
+	}
+	
+	public BufferedImage getPreviewLayer() {
+		return this.previewLayer;
+	}
+	
+	public void clearPreviewLayer() {
+		this.previewLayer = new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB);
 	}
 	
 	// use this one for adding an instruction to the queue after real-time drawing
@@ -137,8 +147,11 @@ public class DoodlePanel extends JPanel {
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		for (BufferedImage img : this.displayLayers) {
-			g.drawImage(img, 0, 0, null);
+		for (int i=0; i < 4; i++) {
+			g.drawImage(this.displayLayers.get(i), 0, 0, null);
+			if (i == this.myWindow.getCurrentLayer()) {
+				g.drawImage(this.previewLayer, 0, 0, null);
+			}
 		}
 	}
 

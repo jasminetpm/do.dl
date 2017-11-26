@@ -11,6 +11,7 @@ import java.util.LinkedList;
 
 import model.CanvasState;
 import model.Instruction;
+import model.UndoInstruction;
 
 public class PaintServer {
 	private ServerSocket paintServSock;
@@ -45,6 +46,16 @@ public class PaintServer {
 		if (PaintServer.instructionLog.size() > 20) {
 			poppedInstr = PaintServer.instructionLog.removeFirst();
 			poppedInstr.execute(PaintServer.baseLayers);
+		}
+	}
+	
+	public static void undo() {
+		// only undo if there are instructions in the log
+		if (PaintServer.instructionLog.size() > 0) {
+			// remove the last stored instruction
+			PaintServer.instructionLog.removeLast();
+		} else {
+			System.out.println("Instruction log is empty!");
 		}
 	}
 	
@@ -104,10 +115,19 @@ public class PaintServer {
 				while(true) {
 					Instruction instr = (Instruction) this.ois.readObject();
 					System.out.println("Got message from client #" + instr.getClientId());
-					PaintServer.executeInstruction(instr);
-					for (ConnectionHandler connection : PaintServer.paintClientList) {
-						if (connection.id != instr.getClientId()) {
-							connection.sendInstruction(instr);
+					if (instr instanceof UndoInstruction) {
+						PaintServer.undo();
+						for (ConnectionHandler connection : PaintServer.paintClientList) {
+							if (connection.id != instr.getClientId()) {
+								connection.sendInstruction(instr);
+							}
+						}
+					} else {
+						PaintServer.executeInstruction(instr);
+						for (ConnectionHandler connection : PaintServer.paintClientList) {
+							if (connection.id != instr.getClientId()) {
+								connection.sendInstruction(instr);
+							}
 						}
 					}
 				} 
