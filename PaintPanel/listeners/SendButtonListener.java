@@ -9,7 +9,6 @@ import javax.swing.JTextArea;
 import chatUI.MainWindow;
 import chatUI.SendTextPanel;
 import serverDealer.SendString;
-import serverDealer.SendString;
 
 public class SendButtonListener implements ActionListener{
 	private MainWindow mw;

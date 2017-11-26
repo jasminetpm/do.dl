@@ -15,7 +15,6 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 import client.MyClient;
-import controller.SetPort;
 
 
 public class MainWindow extends JPanel
@@ -35,10 +34,10 @@ public class MainWindow extends JPanel
 	private String ip;
 	
 	
-	public MainWindow(String ip) throws UnknownHostException, IOException, InterruptedException
+	public MainWindow(String ip, int port) throws UnknownHostException, IOException, InterruptedException
 	{
 		this.ip = ip;
-		this.mc = new MyClient(ip, SetPort.port, this);
+		this.mc = new MyClient(ip, port, this);
 		this.mc.start();
 		
 		//this.tp = new TitlePanel(this);

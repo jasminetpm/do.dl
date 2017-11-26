@@ -108,7 +108,7 @@ public class PaintWindow extends JFrame {
 		this.setLayout(new BorderLayout());
 		this.toolbar = new JPanel();
 		PaintWindow.paintPanel = new DoodlePanel(this);
-		this.chatPanel = new MainWindow("127.0.0.1");
+		this.chatPanel = new MainWindow(ip, port + 1);
 		this.populateToolbar(); // Adds various buttons to toolbar
 		this.createColorChooser();
 		// Adding JPanels to JFrame
@@ -116,7 +116,7 @@ public class PaintWindow extends JFrame {
 		this.add(this.toolbar, BorderLayout.LINE_START);
 		this.add(this.chatPanel, BorderLayout.LINE_END);
 		// Fixing window dimensions
-		this.setPreferredSize(WINDOW_SIZE);;
+		this.setPreferredSize(WINDOW_SIZE);
 		this.setResizable(false);
 		// Default JFrame operations
 		this.pack();

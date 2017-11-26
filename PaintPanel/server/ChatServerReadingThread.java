@@ -7,7 +7,7 @@ public class ChatServerReadingThread extends Thread
 {
 	private BufferedReader incomingText;
 	private ChatServerClientThread ct;
-	private ChatServer server;
+	private PaintServer server;
 
 	public ChatServerReadingThread(BufferedReader br, ChatServerClientThread ct)
 	{
@@ -25,15 +25,15 @@ public class ChatServerReadingThread extends Thread
 			while((inc = this.incomingText.readLine()) != null)
 			{
 				int i;
-				for (i = 0; i < this.server.getClientList().size(); i++)
+				for (i = 0; i < this.server.getChatClientList().size(); i++)
 				{
-					if (this.server.getClientList().get(i).equals(this.ct))
+					if (this.server.getChatClientList().get(i).equals(this.ct))
 					{
 						
 					}
 					else
 					{
-						this.server.getClientList().get(i).sendMessage(inc);
+						this.server.getChatClientList().get(i).sendMessage(inc);
 						System.out.println("I am sending out the message to client " + i + "\n");
 					}
 				}
