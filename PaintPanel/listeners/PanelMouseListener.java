@@ -276,15 +276,6 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			this.myWindow.getDoodlePanel().repaint();
 			g.dispose();
 			break;
-			
-//		case 5: // Text
-//			TextBoxInstruction textBoxInstr = new TextBoxInstruction(this.myWindow.getColor(), this.myWindow.getFont(), this.textInput,
-//					                                                 this.myWindow.getCurrentLayer(), this.textLocation, this.myWindow.getClientId());
-//			this.myWindow.sendInstruction(textBoxInstr);
-//			this.myWindow.getDoodlePanel().addInstruction(textBoxInstr);
-//			System.out.println("SENT INSTR:");
-//			System.out.println(textBoxInstr);
-//			break;	
 		
 		}
 

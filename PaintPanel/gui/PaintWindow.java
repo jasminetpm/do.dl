@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -23,15 +24,20 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.imageio.ImageIO;
 import javax.swing.AbstractSpinnerModel;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 
 import chatUI.MainWindow;
 import listeners.ColorCancelListener;
@@ -39,6 +45,7 @@ import listeners.ColorOKListener;
 import listeners.ColorPickerListener;
 import listeners.FontSizeListener;
 import listeners.LayerSelectorListener;
+import listeners.SaveButtonListener;
 import listeners.StrokeSizeListener;
 import listeners.ToolSelectorListener;
 import model.CanvasState;
@@ -54,6 +61,7 @@ public class PaintWindow extends JFrame {
 	private JPanel toolbar;
 	private JColorChooser jcc;
 	private JDialog colorDialog;
+	private JFileChooser fileChooser;
 	// Tool buttons
 	private JButton[] toolbarButtons = new JButton[10];
 	private JButton colorButton;
@@ -120,6 +128,7 @@ public class PaintWindow extends JFrame {
 		this.chatPanel = new MainWindow(ip, port + 1);
 		this.populateToolbar(); // Adds various buttons to toolbar
 		this.createColorChooser();
+		this.createFileChooser();
 		// Adding JPanels to JFrame
 		this.add(PaintWindow.paintPanel, BorderLayout.CENTER);
 		this.add(this.toolbar, BorderLayout.LINE_START);
@@ -149,7 +158,8 @@ public class PaintWindow extends JFrame {
 			toolButtonSection.add(toolbarButtons[i]);
 		}
 		this.toolbar.add(toolButtonSection);
-		
+		// Setting file chooser
+		toolbarButtons[8].addActionListener(new SaveButtonListener(this));
 		// Setting color chooser
 		JPanel colorSection = new JPanel(new BorderLayout());
 		colorSection.setBackground(Color.WHITE);
@@ -217,6 +227,57 @@ public class PaintWindow extends JFrame {
 	public void viewColorChooser()
 	{
 		this.colorDialog.setVisible(true);
+	}
+	
+	private void createFileChooser()
+	{
+		FileFilter pngFilter = new FileNameExtensionFilter("PNG File", "png");
+		FileFilter gifFilter = new FileNameExtensionFilter("GIF File", "gif");
+		FileFilter jpgFilter = new FileNameExtensionFilter("JPG File", "jpg", "jpeg");
+		this.fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+		this.fileChooser.addChoosableFileFilter(pngFilter);
+		this.fileChooser.addChoosableFileFilter(gifFilter);
+		this.fileChooser.addChoosableFileFilter(jpgFilter);
+	}
+	
+	public void viewFileChooser()
+	{
+		int returnVal = this.fileChooser.showSaveDialog(this);
+		if (returnVal == JFileChooser.APPROVE_OPTION)
+		{
+			File selectedFile = this.fileChooser.getSelectedFile();
+			System.out.println(selectedFile.getAbsolutePath());
+			System.out.println(this.fileChooser.getFileFilter().getDescription());
+			if (this.fileChooser.getFileFilter().getDescription().equals("PNG File"))
+			{
+				File pngFile = new File(selectedFile.getAbsolutePath() + ".png");
+				try {
+				ImageIO.write(this.getDoodlePanel().mergeLayers(this.getDoodlePanel().getDisplayLayers()), 
+						      "PNG", pngFile);
+				} catch (IOException e) {
+				e.printStackTrace();
+				}
+			} else if (this.fileChooser.getFileFilter().getDescription().equals("JPG File"))
+			{
+				File jpgFile = new File(selectedFile.getAbsolutePath() + ".jpg");
+				try {
+					ImageIO.write(this.getDoodlePanel().mergeLayers(this.getDoodlePanel().getDisplayLayers()), 
+							      "JPG", jpgFile);
+					} catch (IOException e) {
+					e.printStackTrace();
+					}
+			} else if (this.fileChooser.getFileFilter().getDescription().equals("GIF File"))
+			{
+				File gifFile = new File(selectedFile.getAbsolutePath() + ".gif");
+				try {
+					ImageIO.write(this.getDoodlePanel().mergeLayers(this.getDoodlePanel().getDisplayLayers()), 
+							      "GIF", gifFile);
+					} catch (IOException e) {
+					e.printStackTrace();
+					}
+			}
+			
+		}
 	}
 	
 	public int getFontSize()
