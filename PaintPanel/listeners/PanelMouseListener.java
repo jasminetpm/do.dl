@@ -26,6 +26,7 @@ import gui.PaintWindow;
 import model.BrushInstruction;
 import model.BucketInstruction;
 import model.CircleInstruction;
+import model.CommentOrderInstruction;
 import model.EraserInstruction;
 import model.RectangleInstruction;
 import model.TextBoxInstruction;
@@ -38,6 +39,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 	private Point textLocation;
 	private String textInput;
 	private Color windowColor;
+	private int commentCircleFlag = 0; //default is 0 (no action), sets to 1 if it is drawing
 
 	public PanelMouseListener(PaintWindow pw) {
 		this.myWindow = pw;
@@ -139,26 +141,33 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			setEndPoint(e.getX(), e.getY());
 			this.myWindow.incrementCommentCircleCount();
 			
-			// get the preview layer
-			BufferedImage commentLayer = this.myWindow.getDoodlePanel().getPreviewLayer();
-			Graphics2D commentGraph = commentLayer.createGraphics();
+			if (this.myWindow.getCircleFlag() == 1)
 			
-			
-			// clear it
-			commentGraph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			commentGraph.setComposite(AlphaComposite.Src);
-			commentGraph.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
-			commentGraph.setColor(new Color(0,0,0,0));
-			commentGraph.fillRect(0, 0, commentLayer.getWidth(), commentLayer.getHeight());
-			
-			
-			// draw the oval and repaint
-			commentGraph.setColor(Color.RED);
-			char[] charArray = new char[] {Integer.toString(this.myWindow.getCommentCount()).charAt(0)};
-			commentGraph.setFont(new Font("Monaco", Font.PLAIN, 20));
-			commentGraph.drawChars(charArray, 0, 1, Math.abs(this.x1-this.x2),  Math.abs(this.y1-this.y2));
-			commentGraph.drawOval(Math.min(this.x1,this.x2), Math.min(this.y1,this.y2), Math.abs(this.x1-this.x2), Math.abs(this.y1-this.y2));
-			this.myWindow.getDoodlePanel().repaint();
+			{
+				this.myWindow.setCircleFLag(0);
+				this.commentCircleFlag++;
+				// get the preview layer
+				BufferedImage commentLayer = this.myWindow.getDoodlePanel().getPreviewLayer();
+				Graphics2D commentGraph = commentLayer.createGraphics();
+				
+				
+				// clear it
+				commentGraph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				commentGraph.setComposite(AlphaComposite.Src);
+				commentGraph.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
+				commentGraph.setColor(new Color(0,0,0,0));
+				commentGraph.fillRect(0, 0, commentLayer.getWidth(), commentLayer.getHeight());
+				
+				
+				// draw the oval and repaint
+				commentGraph.setColor(Color.RED);
+				commentGraph.setStroke(new BasicStroke(10));
+				char[] charArray = new char[] {Integer.toString(this.myWindow.getCommentCount()).charAt(0)};
+				commentGraph.setFont(new Font("Monaco", Font.PLAIN, 20));
+				commentGraph.drawChars(charArray, 0, 1, this.x1,  this.y1);
+				commentGraph.drawOval(Math.min(this.x1,this.x2), Math.min(this.y1,this.y2), Math.abs(this.x1-this.x2), Math.abs(this.y1-this.y2));
+				this.myWindow.getDoodlePanel().repaint();
+			}
 			break;
 			
 		}
@@ -224,6 +233,9 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			setStartPoint(e.getX(), e.getY());
 			break;
 		case 3: // Draw rectangle
+			setStartPoint(e.getX(), e.getY());
+			break;
+		case 6: // Comment
 			setStartPoint(e.getX(), e.getY());
 			break;
 		}
@@ -306,6 +318,39 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			g.drawRect(Math.min(this.x1,this.x2), Math.min(this.y1,this.y2), Math.abs(this.x1-this.x2), Math.abs(this.y1-this.y2));
 			this.myWindow.getDoodlePanel().repaint();
 			g.dispose();
+			break;
+		
+		case 6: // Comment
+			if (this.commentCircleFlag == 1)
+			{
+				this.commentCircleFlag = 0;
+				
+				this.myWindow.getDoodlePanel().clearPreviewLayer();
+				
+				setEndPoint(e.getX(), e.getY());
+				int commentLayer_ = this.myWindow.getCurrentLayer();
+				BufferedImage commentImage_ = this.myWindow.getDoodlePanel().getDisplayLayers().get(commentLayer_);
+				Graphics2D commentGraphics_ = commentImage_.createGraphics();
+				
+				commentGraphics_.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				commentGraphics_.setColor(this.myWindow.getColor());
+				commentGraphics_.setStroke(new BasicStroke(10));
+				CircleInstruction commentCircle = new CircleInstruction(Color.RED, 10, this.myWindow.getCurrentLayer(), this.x1, this.y1, this.x2, this.y2, this.myWindow.getClientId());
+				CommentOrderInstruction coi = new CommentOrderInstruction(this.myWindow.getCommentCount(), this.x1, this.y1, this.x2, this.y2, this.myWindow.getClientId());
+				this.myWindow.sendInstruction(commentCircle);
+				this.myWindow.getDoodlePanel().addInstruction(commentCircle);
+				System.out.println("SENT INSTR:");
+				System.out.println(commentCircle);
+				
+				commentGraphics_.setColor(Color.RED);
+				char[] charArray = new char[] {Integer.toString(this.myWindow.getCommentCount()).charAt(0)};
+				commentGraphics_.setFont(new Font("Monaco", Font.PLAIN, 20));
+				commentGraphics_.drawChars(charArray, 0, 1, this.x1,  this.y1);
+				commentGraphics_.drawOval(Math.min(this.x1,this.x2), Math.min(this.y1,this.y2), Math.abs(this.x1-this.x2), Math.abs(this.y1-this.y2));
+				this.myWindow.getDoodlePanel().repaint();
+				commentGraphics_.dispose();
+				
+			}
 			break;
 		
 		}
