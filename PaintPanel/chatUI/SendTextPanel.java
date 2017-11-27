@@ -24,14 +24,38 @@ import listeners.EnterKeyListener;
 import listeners.InputMessageListener;
 import listeners.SendButtonListener;
 
+/**
+ * the sendTextPanel where user inputs text and gets sent
+ * @author Coco
+ * @version 1.0 Nov 2017
+ */
 public class SendTextPanel extends JPanel 
 {
+	/**
+	 * the MainWindow where it locates
+	 */
 	private MainWindow mw;
+	/**
+	 * the sendButtor which upon clicking will send the message to the server
+	 */
 	private JButton sendButton;
+	/**
+	 * the jtextarea where the user types in his chats 
+	 */
 	public  JTextArea jta;
+	/**
+	 * enables scrolling
+	 */
 	public JScrollPane paneScroll;
+	/**
+	 * the icon to make the UI look nicer
+	 */
 	private ImageIcon sendIcon = new ImageIcon("PaintPanel/imagesource/ic_send_black_24dp_1x.png");
 
+	/**
+	 * constructor for SendTextPanel
+	 * @param mw: the MainWindow on which SendTextPanel is initiated
+	 */
 	public SendTextPanel(MainWindow mw) {
 		// TODO Auto-generated constructor stub
 		this.mw = mw;
@@ -54,11 +78,19 @@ public class SendTextPanel extends JPanel
 		this.add(this.sendButton, BorderLayout.LINE_END);
 	}
 	
+	/**
+	 * getter for JTextArea
+	 * @return the JTextArea associated with the SendTextPanel
+	 */
 	public JTextArea getJTA()
 	{
 		return this.jta;
 	}
 	
+	/**
+	 * return the text stored in the JTextArea
+	 * @return the message needing to be sent
+	 */
 	public String getTextJTA()
 	{
 		return this.jta.getText();

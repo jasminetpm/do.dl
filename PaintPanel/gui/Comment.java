@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+
 public class Comment extends JPanel {
 	private int index;
 	private String comment;

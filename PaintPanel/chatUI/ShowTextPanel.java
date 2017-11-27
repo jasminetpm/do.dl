@@ -14,12 +14,30 @@ import javax.swing.text.DefaultCaret;
 
 import chatUI.MainWindow;
 
+/**
+ * the ShowTextPanel where the chat histories are shown
+ * @author Coco
+ * @version 1.0 Nov 2017
+ */
 public class ShowTextPanel extends JPanel 
 {
+	/**
+	 * the MainWindow on which it is initialised
+	 */
 	private MainWindow mw;
+	/**
+	 * enables scrolling
+	 */
 	private JScrollPane jsp;
+	/**
+	 * the JTextArea where the chat history is shown
+	 */
 	private JTextArea text;
 
+	/**
+	 * constructor
+	 * @param mw: the MainWindow on which the ShowTextPanel is initialised
+	 */
 	public ShowTextPanel(MainWindow mw) 
 	{
 		this.mw = mw;
@@ -39,6 +57,10 @@ public class ShowTextPanel extends JPanel
 		
 	}
 	
+	/**
+	 * show in JTextArea the input in format
+	 * @param message: the input needs to be shown
+	 */
 	public void textAdded(String message)
 	{
 		message = "<" + this.mw.getUserName() + ">: " + message;
@@ -47,6 +69,10 @@ public class ShowTextPanel extends JPanel
 		this.text.repaint();
 	}
 	
+	/**
+	 * called locally. show in TextArea the input in a local-user format
+	 * @param message: input message received
+	 */
 	public void textReceived(String message)
 	{
 		String originalText = this.text.getText();
@@ -54,6 +80,10 @@ public class ShowTextPanel extends JPanel
 		this.text.repaint();
 	}
 	
+	/**
+	 * getter for the JTextArea
+	 * @return JTextArea
+	 */
 	public JTextArea getJTA()
 	{
 		return this.text;

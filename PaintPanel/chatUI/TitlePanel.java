@@ -1,3 +1,5 @@
+
+/*
 package chatUI;
 
 import java.awt.Color;
@@ -20,3 +22,4 @@ public class TitlePanel extends JPanel
 	}
 	
 }
+*/
