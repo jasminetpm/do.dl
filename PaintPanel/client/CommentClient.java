@@ -46,6 +46,7 @@ public class CommentClient extends Thread {
 		{
 			while (this.sendMessageCounter < this.acp.getMessageCounter())
 			{
+				System.out.println("Sent comment is called");
 				this.pw.println(this.acp.getMyLastWords());
 				System.out.println("Just got the message to send: " + this.acp.getMyLastWords());
 				this.pw.flush();

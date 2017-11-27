@@ -16,12 +16,12 @@ import chatUI.MainWindow;
 
 public class CommentPanel extends JPanel 
 {
-	private PaintWindow pw;
+	private AllCommentPane pw;
 	private JScrollPane jsp;
 	private JTextArea text;
 	private int counter;
 
-	public CommentPanel(PaintWindow pw) 
+	public CommentPanel(AllCommentPane pw) 
 	{
 		this.pw = pw;
 		this.counter = 0;
@@ -44,11 +44,11 @@ public class CommentPanel extends JPanel
 	public void textAdded(String message)
 	{
 		this.counter++;
-		message = "Comment " + this.counter +": " + "<" + this.pw.getMw().getUserName() + ">: " + message;
+		message = "Comment " + this.counter +": " + "<" + this.pw.getPW().getMw().getUserName() + ">: " + message;
 		String originalText = this.text.getText();
 		this.text.setText(originalText + '\n' + '\n' + message); 
 		this.text.repaint();
-		this.pw.getACP().repaint();
+		this.pw.repaint();
 	}
 	
 	public void textReceived(String message)
@@ -56,7 +56,7 @@ public class CommentPanel extends JPanel
 		String originalText = this.text.getText();
 		this.text.setText(originalText + '\n' + '\n' + message); 
 		this.text.repaint();
-		this.pw.getACP().repaint();
+		this.pw.repaint();
 	}
 	
 	public JTextArea getJTA()

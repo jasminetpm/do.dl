@@ -143,8 +143,8 @@ public class PaintWindow extends JFrame {
 		this.populateToolbar(); // Adds various buttons to toolbar
 		this.createColorChooser();
 		this.createFileChooser();
-		this.commentp = new CommentPanel(this);
-		this.scp = new SendCommentPanel(this);
+		//this.commentp = new CommentPanel(this.acp.getCP());
+		//this.scp = new SendCommentPanel(this.acp.getSCP());
 		this.acp = new AllCommentPane(this, ip, port + 2);
 		// Adding JPanels to JFrame
 		this.add(PaintWindow.paintPanel, BorderLayout.CENTER);

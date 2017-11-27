@@ -19,16 +19,16 @@ public class AllCommentPane extends JPanel{
 	
 	public AllCommentPane(PaintWindow pw, String ip, int port) throws UnknownHostException, IOException
 	{
+		this.cc = new CommentClient(ip, port, this);
+		this.cc.start();
 		this.pw = pw;
-		this.cp = this.pw.getCP();
-		this.scp = this.pw.getSTP();
+		this.cp = new CommentPanel(this);
+		this.scp = new SendCommentPanel(this);
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.add(this.cp, BorderLayout.EAST);
 		this.add(this.scp, BorderLayout.WEST);
 		
-		
-		this.cc = new CommentClient(ip, port, this);
 	}
 
 	public void incrementMessageCounter()
@@ -54,5 +54,15 @@ public class AllCommentPane extends JPanel{
 	public CommentPanel getCP()
 	{
 		return this.cp;
+	}
+	
+	public PaintWindow getPW()
+	{
+		return this.pw;
+	}
+	
+	public SendCommentPanel getSCP()
+	{
+		return this.scp;
 	}
 }
