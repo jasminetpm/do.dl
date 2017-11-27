@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,6 +34,7 @@ public class MainWindow extends JPanel
 	public static String name;
 	private MyClient mc;
 	private String ip;
+	private static final Dimension CHAT_PANEL_DIMENSIONS = new Dimension(260, 640);
 	
 	
 	public MainWindow(String ip, int port) throws UnknownHostException, IOException, InterruptedException
@@ -48,14 +51,27 @@ public class MainWindow extends JPanel
 		
 		//this.add(this.tp, BorderLayout.PAGE_START);
 		this.add(this.showp);
+		this.add(Box.createRigidArea(new Dimension(0, 5)));
 		this.add(this.sendp);
 		
-		this.chooseUserName = new JOptionPane("User Name");
-		this.userName = this.chooseUserName.showInputDialog("Please name yourself:");
-		this.name = this.userName;
+		while(true) // while loop makes program re-run until a username is entered or CANCEL button is hit
+		{
+			Object returnVal = JOptionPane.showInputDialog("Please name yourself:");
+			if (returnVal == null)
+			{
+				System.exit(0);
+			} else if(returnVal.equals(""))
+			{
+				System.out.println("No username entered.");
+			} else
+			{
+				this.userName = (String) returnVal;
+				break;
+			}
+		}
 		
 		this.setBorder(BorderFactory.createEmptyBorder(1, 5, 1, 1));
-		this.setPreferredSize(new Dimension(260, 640));
+		this.setPreferredSize(CHAT_PANEL_DIMENSIONS);
 	}
 	
 	

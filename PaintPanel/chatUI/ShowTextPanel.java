@@ -31,7 +31,7 @@ public class ShowTextPanel extends JPanel
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		// Places JTextArea in JScrollPane
 		this.jsp = new JScrollPane(text);
-		this.jsp.setPreferredSize(new Dimension(260, 470));
+		this.jsp.setPreferredSize(new Dimension(260, 570));
 		this.text.setLineWrap(true);
 		this.jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		this.jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
