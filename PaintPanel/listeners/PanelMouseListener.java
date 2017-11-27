@@ -318,12 +318,13 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 
 		case 6: // Draw comment
 			setEndPoint(e.getX(), e.getY());
-
+			String inputComment = this.myWindow.getCommentText();
+			this.myWindow.getCommentDisplay().addComment(this.myWindow.getCommentIndex(), inputComment);
 			// send instruction
 			CommentInstruction comment = new CommentInstruction(this.myWindow.getColor(), this.myWindow.getStrokeSize(),
 					this.x1, this.y1, this.x2, this.y2, this.myWindow.getClientId(), this.myWindow.getCommentIndex(),
-					this.myWindow.getCommentText());
-			this.myWindow.setCurrentCommentInstruction(comment);
+					inputComment);
+			this.myWindow.sendInstruction(comment);
 
 			break;
 		}

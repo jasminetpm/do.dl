@@ -68,7 +68,7 @@ public class PaintWindow extends JFrame {
 	private JDialog colorDialog;
 	private JFileChooser fileChooser;
 	private static CommentDisplayPane commentDisplay;
-	private CommentEntryPane commentEntry;
+	private CommentDialog commentEntry;
 	// Tool buttons
 	private JButton[] toolbarButtons = new JButton[10];
 	private JButton colorButton;
@@ -136,7 +136,7 @@ public class PaintWindow extends JFrame {
 		this.toolbar = new JPanel();
 		PaintWindow.paintPanel = new DoodlePanel(this);
 		this.commentDisplay = new CommentDisplayPane(this);
-		this.commentEntry = new CommentEntryPane(this);
+		this.commentEntry = new CommentDialog(this);
 		this.centerWrapper = new JPanel();
 		this.centerWrapper.setLayout(new BoxLayout(this.centerWrapper, BoxLayout.Y_AXIS));
 		this.centerWrapper.add(PaintWindow.paintPanel);
@@ -402,6 +402,11 @@ public class PaintWindow extends JFrame {
 				this.currentCommentInstruction = null;
 			}
 		}
+	}
+	
+	public CommentDisplayPane getCommentDisplay()
+	{
+		return this.commentDisplay;
 	}
 	
 	public void clearCommentInstruction() {
