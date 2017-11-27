@@ -8,8 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 
-import listeners.CommentButtonListener;
-
 public class CommentDialog extends JPanel {
 	private PaintWindow pw;
 	
