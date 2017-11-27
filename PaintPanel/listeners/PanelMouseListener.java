@@ -137,6 +137,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			
 		case 6:	// Draw the circle for comment
 			setEndPoint(e.getX(), e.getY());
+			this.myWindow.incrementCommentCircleCount();
 			
 			// get the preview layer
 			BufferedImage commentLayer = this.myWindow.getDoodlePanel().getPreviewLayer();

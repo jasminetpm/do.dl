@@ -39,7 +39,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
-import chatUI.CommentPanel;
+
 import chatUI.MainWindow;
 import listeners.ColorCancelListener;
 import listeners.ColorOKListener;
@@ -65,6 +65,7 @@ public class PaintWindow extends JFrame {
 	private JDialog colorDialog;
 	private JFileChooser fileChooser;
 	private CommentPanel commentp;
+	private SendCommentPanel scp;
 	// Tool buttons
 	private JButton[] toolbarButtons = new JButton[10];
 	private JButton colorButton;
@@ -89,6 +90,9 @@ public class PaintWindow extends JFrame {
 	private int toolType = 0;
 	private int currentLayer = 0;
 	private Color currentColor = Color.RED;
+	private int commentCount = 0;
+	private int commentCircleCount = 0;
+	
 	// Button icons
 	private ImageIcon brush = new ImageIcon("PaintPanel/imagesource/ic_brush_black_24dp_1x.png");
 	private ImageIcon eraser = new ImageIcon("PaintPanel/imagesource/double-sided-eraser.png");
@@ -133,10 +137,15 @@ public class PaintWindow extends JFrame {
 		this.createColorChooser();
 		this.createFileChooser();
 		this.commentp = new CommentPanel(this);
+		this.scp = new SendCommentPanel(this);
 		// Adding JPanels to JFrame
 		this.add(PaintWindow.paintPanel, BorderLayout.CENTER);
 		this.add(this.toolbar, BorderLayout.LINE_START);
-		this.add(this.chatPanel, BorderLayout.LINE_END);
+		//this.add(this.chatPanel, BorderLayout.LINE_END);
+		
+	//Please give it a better layout!
+		this.add(this.commentp, BorderLayout.LINE_END);
+		this.add(this.scp, BorderLayout.AFTER_LAST_LINE);
 		// Fixing window dimensions
 		this.setPreferredSize(WINDOW_SIZE);
 		this.setResizable(false);
@@ -434,5 +443,25 @@ public class PaintWindow extends JFrame {
 	public CommentPanel getCP()
 	{
 		return this.commentp;
+	}
+	
+	public void incrementCommentCount()
+	{
+		this.commentCount++;
+	}
+	
+	public int getCommentCount()
+	{
+		return this.commentCount;
+	}
+	
+	public void incrementCommentCircleCount()
+	{
+		this.commentCircleCount++;
+	}
+	
+	public int getCommentCircleCount()
+	{
+		return this.commentCircleCount;
 	}
 }
