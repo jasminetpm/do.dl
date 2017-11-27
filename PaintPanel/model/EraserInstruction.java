@@ -10,11 +10,22 @@ import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+/**
+ * A class which represents a path made by the eraser tool
+ * @author Daniel Lok
+ */
 public class EraserInstruction extends Instruction {
 	private int lineWidth;
 	private int layer;
 	private ArrayList<Point> pointList;
 
+	/**
+	 * Class constructor
+	 * @param _lineWidth the path's line width
+	 * @param _layer the layer which we want to erase on
+	 * @param _pointList the point list which the path is comprised of
+	 * @param _clientId the client's ID (provided by the server)
+	 */
 	public EraserInstruction(int _lineWidth, int _layer, ArrayList<Point> _pointList, int _clientId) {
 		this.lineWidth = _lineWidth;
 		this.layer = _layer;
@@ -22,6 +33,10 @@ public class EraserInstruction extends Instruction {
 		super.clientId = _clientId;
 	}
 
+	/**
+	 * Draws the path on the appropriate layer.
+	 * @param layers the displayLayers field of the DoodlePanel
+	 */
 	@Override
 	public void execute(ArrayList<BufferedImage> layers) {
 		BufferedImage img = layers.get(this.layer);

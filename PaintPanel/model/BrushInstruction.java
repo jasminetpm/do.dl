@@ -9,12 +9,24 @@ import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+/**
+ * A class which represents a path made by the brush tool
+ * @author Daniel Lok
+ */
 public class BrushInstruction extends Instruction {
 	private Color color;
 	private int lineWidth;
 	private int layer;
 	private ArrayList<Point> pointList;
 
+	/**
+	 * Class constructor
+	 * @param _color the color of the path
+	 * @param _lineWidth the width of the path
+	 * @param _layer the layer on which the path is drawn
+	 * @param _pointList the list of points which the path is comprised of
+	 * @param _clientId the client's ID (provided by the server)
+	 */
 	public BrushInstruction(Color _color, int _lineWidth, int _layer, ArrayList<Point> _pointList, int _clientId) {
 		this.color = _color;
 		this.lineWidth = _lineWidth;
@@ -23,6 +35,10 @@ public class BrushInstruction extends Instruction {
 		super.clientId = _clientId;
 	}
 
+	/**
+	 * Draws the path on the appropriate layer.
+	 * @param layers the displayLayers field of the DoodlePanel
+	 */
 	public void execute(ArrayList<BufferedImage> layers) {
 		BufferedImage img = layers.get(this.layer);
 		Graphics2D g = img.createGraphics();
