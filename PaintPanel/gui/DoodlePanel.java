@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import listeners.PanelMouseListener;
 import model.CanvasState;
+import model.CommentInstruction;
 import model.Instruction;
 
 public class DoodlePanel extends JPanel {
@@ -33,7 +34,7 @@ public class DoodlePanel extends JPanel {
 		// add 4 layers
 		this.baseLayers = new ArrayList<BufferedImage>();
 		this.displayLayers = new ArrayList<BufferedImage>();
-		for (int i = 0; i < 4; i++) 
+		for (int i = 0; i < 5; i++) 
 		{
 			this.baseLayers.add(new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB));
 			this.displayLayers.add(new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB));
@@ -60,6 +61,7 @@ public class DoodlePanel extends JPanel {
 	
 	public void clearPreviewLayer() {
 		this.previewLayer = new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB);
+		this.repaint();
 	}
 	
 	// use this one for adding an instruction to the queue after real-time drawing
@@ -131,7 +133,12 @@ public class DoodlePanel extends JPanel {
 		instr.execute(this.displayLayers);
 		
 		// unless the queue size > 20, then we start modifying the base layers
-		this.instructionLog.add(instr);
+		if (instr instanceof CommentInstruction) {
+			this.myWindow.getCommentList().add((CommentInstruction) instr);
+		} else {
+			this.instructionLog.add(instr);
+		}
+		
 		if (this.instructionLog.size() > 20) {
 			poppedInstr = this.instructionLog.removeFirst();
 			poppedInstr.execute(this.baseLayers);
@@ -174,9 +181,19 @@ public class DoodlePanel extends JPanel {
 		 return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 	
+	public void repaintComments() {
+		this.displayLayers.set(4, new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB));
+		
+		for (CommentInstruction comment : this.myWindow.getCommentList()) {
+			comment.execute(this.displayLayers);
+		}
+		
+		this.repaint();
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
-		for (int i=0; i < 4; i++) {
+		for (int i=0; i < 5; i++) {
 			g.drawImage(this.displayLayers.get(i), 0, 0, null);
 			if (i == this.myWindow.getCurrentLayer()) {
 				g.drawImage(this.previewLayer, 0, 0, null);

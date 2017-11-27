@@ -18,11 +18,11 @@ public class CommentInstruction extends Instruction {
 	private int index;
 	private String comment;
 	
-	public CommentInstruction(Color _color, int _lineWidth, int _layer, int _x1, int _y1, int _x2, int _y2,
+	public CommentInstruction(Color _color, int _lineWidth, int _x1, int _y1, int _x2, int _y2,
 			int _clientId, int _index, String _comment) {
 		this.color = _color;
 		this.lineWidth = _lineWidth;
-		this.layer = _layer;
+		this.layer = 4;
 		this.x1 = _x1;
 		this.y1 = _y1;
 		this.x2 = _x2;

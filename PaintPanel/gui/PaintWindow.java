@@ -19,6 +19,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -118,6 +119,7 @@ public class PaintWindow extends JFrame {
 	// Listeners
 	private ColorPickerListener colorListener;
 	private CommentInstruction currentCommentInstruction;
+	private static ArrayList<CommentInstruction> comments = new ArrayList<CommentInstruction>();
 	
 	private PaintClient paintClient;
 	private static int clientId;
@@ -133,7 +135,7 @@ public class PaintWindow extends JFrame {
 		this.setLayout(new BorderLayout());
 		this.toolbar = new JPanel();
 		PaintWindow.paintPanel = new DoodlePanel(this);
-		this.commentDisplay = new CommentDisplayPane();
+		this.commentDisplay = new CommentDisplayPane(this);
 		this.commentEntry = new CommentEntryPane(this);
 		this.centerWrapper = new JPanel();
 		this.centerWrapper.setLayout(new BoxLayout(this.centerWrapper, BoxLayout.Y_AXIS));
@@ -377,6 +379,10 @@ public class PaintWindow extends JFrame {
 		return this.commentEntry.getText();
 	}
 	
+	public ArrayList<CommentInstruction> getCommentList() {
+		return this.comments;
+	}
+	
 	public void setCurrentCommentInstruction(CommentInstruction comment) {
 		this.currentCommentInstruction = comment;
 	}
@@ -390,13 +396,16 @@ public class PaintWindow extends JFrame {
 				System.out.println("Please enter your comment");
 			} else {
 				this.getDoodlePanel().clearPreviewLayer();
-				this.commentDisplay.addComment(this.currentCommentInstruction.getIndex(), this.currentCommentInstruction.getCommentText());
+				PaintWindow.commentDisplay.addComment(this.currentCommentInstruction.getIndex(), this.currentCommentInstruction.getCommentText());
 				this.getDoodlePanel().executeInstruction(this.currentCommentInstruction);
 				this.sendInstruction(this.currentCommentInstruction);
 				this.currentCommentInstruction = null;
 			}
 		}
-		
+	}
+	
+	public void clearCommentInstruction() {
+		this.currentCommentInstruction = null;
 	}
 	
 	// I declare the PaintClient class here to provide easy access to the parent fields
@@ -435,6 +444,7 @@ public class PaintWindow extends JFrame {
 			try {
 				this.ois = new ObjectInputStream(this.is);
 				while ((message = this.ois.readObject()) != null) {
+					System.out.println("Received message");
 					if (message instanceof Integer) {
 						System.out.println("Got ID: " + message);
 						PaintWindow.clientId = ((Integer) message).intValue();
@@ -448,15 +458,16 @@ public class PaintWindow extends JFrame {
 							PaintWindow.paintPanel.undo();
 						} else if (instr instanceof CommentInstruction) {
 							CommentInstruction comment = (CommentInstruction) instr;
-							PaintWindow.commentDisplay.addComment(comment.getIndex(), comment.getCommentText());
+							System.out.println("Received instruction: comment");
+							PaintWindow.comments.add(comment);
+							PaintWindow.commentDisplay.repopulateComments();
 							PaintWindow.paintPanel.executeInstruction(comment);
 						} else {
-							System.out.println("Received instruction:");
 							PaintWindow.paintPanel.executeInstruction(instr);	
-						}
-												
+						}			
 					}
 				}
+				System.out.println("Read a null for some reason");
 			} catch (ClassNotFoundException | IOException e) {
 				// TODO Auto-generated catch block
 				System.out.println("Server has disconnected");
