@@ -26,7 +26,7 @@ import gui.PaintWindow;
 import model.BrushInstruction;
 import model.BucketInstruction;
 import model.CircleInstruction;
-import model.CommentOrderInstruction;
+//import model.CommentOrderInstruction;
 import model.EraserInstruction;
 import model.RectangleInstruction;
 import model.TextBoxInstruction;
@@ -336,7 +336,8 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 				commentGraphics_.setColor(this.myWindow.getColor());
 				commentGraphics_.setStroke(new BasicStroke(10));
 				CircleInstruction commentCircle = new CircleInstruction(Color.RED, 10, this.myWindow.getCurrentLayer(), this.x1, this.y1, this.x2, this.y2, this.myWindow.getClientId());
-				CommentOrderInstruction coi = new CommentOrderInstruction(this.myWindow.getCommentCount(), this.x1, this.y1, this.x2, this.y2, this.myWindow.getClientId());
+				//CommentOrderInstruction coi = new CommentOrderInstruction(this.myWindow.getCommentCount(), this.x1, this.y1, this.x2, this.y2, this.myWindow.getClientId());
+				//this.myWindow.sendInstruction(coi);
 				this.myWindow.sendInstruction(commentCircle);
 				this.myWindow.getDoodlePanel().addInstruction(commentCircle);
 				System.out.println("SENT INSTR:");
