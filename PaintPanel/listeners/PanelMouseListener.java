@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
@@ -38,6 +40,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 	private Point textLocation;
 	private String textInput;
 	private Color windowColor;
+	private Point imageLocation;
 
 	public PanelMouseListener(PaintWindow pw) {
 		this.myWindow = pw;
@@ -184,10 +187,20 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			}
 			break;
 		
-//		case 7: // Upload picture
-//			BufferedImage bimg = this.myWindow.getDoodlePanel().getDisplayLayers().get(this.myWindow.getCurrentLayer());
-//			Graphics2D originalImg = bimg.createGraphics();
-//			this
+		case 7: // Upload picture
+			BufferedImage bimg = this.myWindow.getDoodlePanel().getDisplayLayers().get(this.myWindow.getCurrentLayer());
+			Graphics2D _img = bimg.createGraphics();
+			this.imageLocation = new Point(e.getX(), e.getY());
+			try 
+			{
+				BufferedImage originalImg = ImageIO.read(new File(this.myWindow.getChosenImagePath()));
+				_img.drawImage(originalImg, this.imageLocation.x, this.imageLocation.y, null);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			_img.dispose();
+			this.myWindow.getDoodlePanel().repaint();
+			break;
 		}
 	}
 
@@ -307,7 +320,6 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 		this.x2 = x;
         this.y2 = y;
     }
-	
 	
 
 }

@@ -62,6 +62,8 @@ public class PaintWindow extends JFrame {
 	private JColorChooser jcc;
 	private JDialog colorDialog;
 	private JFileChooser fileChooser;
+	private JFileChooser imageChooser;
+	private String imageChosenPath;
 	// Tool buttons
 	private JButton[] toolbarButtons = new JButton[10];
 	private JButton colorButton;
@@ -129,6 +131,7 @@ public class PaintWindow extends JFrame {
 		this.populateToolbar(); // Adds various buttons to toolbar
 		this.createColorChooser();
 		this.createFileChooser();
+		this.createImageChooser();
 		// Adding JPanels to JFrame
 		this.add(PaintWindow.paintPanel, BorderLayout.CENTER);
 		this.add(this.toolbar, BorderLayout.LINE_START);
@@ -247,8 +250,6 @@ public class PaintWindow extends JFrame {
 		if (returnVal == JFileChooser.APPROVE_OPTION)
 		{
 			File selectedFile = this.fileChooser.getSelectedFile();
-			System.out.println(selectedFile.getAbsolutePath());
-			System.out.println(this.fileChooser.getFileFilter().getDescription());
 			if (this.fileChooser.getFileFilter().getDescription().equals("PNG File"))
 			{
 				File pngFile = new File(selectedFile.getAbsolutePath() + ".png");
@@ -279,6 +280,22 @@ public class PaintWindow extends JFrame {
 			}
 			
 		}
+	}
+	
+	private void createImageChooser()
+	{
+		this.imageChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+	}
+	
+	public String getChosenImagePath()
+	{
+		int returnVal = this.imageChooser.showOpenDialog(this);
+		if (returnVal == this.imageChooser.APPROVE_OPTION)
+		{
+			File selectedFile = this.imageChooser.getSelectedFile();
+			this.imageChosenPath = selectedFile.getAbsolutePath();
+		}
+		return this.imageChosenPath;
 	}
 	
 	public int getFontSize()
