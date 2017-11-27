@@ -8,15 +8,17 @@ import javax.swing.JTextArea;
 
 import chatUI.MainWindow;
 import chatUI.SendTextPanel;
+import gui.AllCommentPane;
 import gui.PaintWindow;
+import serverDealer.SendComment;
 import serverDealer.SendString;
 
 public class CommentListener implements ActionListener{
-	private PaintWindow pw;
+	private AllCommentPane pw;
 	private JTextArea jta;
 	private int clickCount = 0;
 	
-	public CommentListener (PaintWindow pw, JTextArea jta)
+	public CommentListener (AllCommentPane pw, JTextArea jta)
 	{
 		this.pw = pw;
 		this.jta = jta;
@@ -27,37 +29,41 @@ public class CommentListener implements ActionListener{
 	{
 		
 	System.out.println(this.clickCount);
-	System.out.println(this.pw.getCommentCount());
+	System.out.println(this.pw.getPW().getCommentCount());
 	
-		if (this.clickCount <= this.pw.getCommentCount() && this.clickCount <= this.pw.getCommentCircleCount() && this.pw.getPrintFlag() == 1)
+		if (this.clickCount <= this.pw.getPW().getCommentCount() && this.clickCount <= this.pw.getPW().getCommentCircleCount() && this.pw.getPW().getPrintFlag() == 1)
 		{
 			try 
 			{
 				String message = this.jta.getText();
 				
-				/*
+				
 				checkMessage(message);
 				try 
 				{
-					new SendString(this.pw, message);
+					new SendComment(this.pw, message);
+					
 				} catch (UnsupportedEncodingException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}*/
+				}
+				
+				
 				this.jta.setText(null);
 				this.jta.repaint();
-				this.pw.getACP().repaint();
+				this.pw.repaint();
 				this.pw.getCP().textAdded(message);
-				//this.mw.updateMyLastWords(message);
+				this.pw.incrementMessageCounter();
+				this.pw.updateMyLastWords(message);
 			} catch (NullPointerException ex)
 			{
 				System.err.println("Can't send empty message");
 			}
 			this.clickCount++;
-			this.pw.setCommentCount(this.clickCount);
-			this.pw.setPrintFlag(0);
+			this.pw.getPW().setCommentCount(this.clickCount);
+			this.pw.getPW().setPrintFlag(0);
 		}
-		else if (this.clickCount > this.pw.getCommentCount())
+		else if (this.clickCount > this.pw.getPW().getCommentCount())
 		{
 			this.pw.getCP().textReceived("You did not select the comment button in the tool bar");
 		}

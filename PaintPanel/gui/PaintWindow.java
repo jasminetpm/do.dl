@@ -68,6 +68,7 @@ public class PaintWindow extends JFrame {
 	private String imageChosenPath;
 	private CommentPanel commentp;
 	private SendCommentPanel scp;
+	private AllCommentPane acp;
 	// Tool buttons
 	private JButton[] toolbarButtons = new JButton[10];
 	private JButton colorButton;
@@ -75,6 +76,8 @@ public class PaintWindow extends JFrame {
 	private JSpinner strokeSizeSelector;
 	private JSpinner layerSelector;
 	// Default values
+	private String ip;
+	private int port;
 	private SpinnerNumberModel fontValues = new SpinnerNumberModel(12,
 			                                                       1,
 			                                                       48,
@@ -85,7 +88,7 @@ public class PaintWindow extends JFrame {
 			                                                         1); // step value
 	private SpinnerNumberModel layerValues = new SpinnerNumberModel(1,
                                                                     1, // minimum value
-                                                                    4, // maximum value
+                                                                    5, // maximum value
                                                                     1); // step value
 	private int fontSize = 12;
 	private int strokeSize = 5;
@@ -94,6 +97,8 @@ public class PaintWindow extends JFrame {
 	private Color currentColor = Color.RED;
 	private int commentCount = 0;
 	private int commentCircleCount = 0;
+	private int printCommentFlag = 0; //havent printed
+	private int circleCommentFlag = 0; //haven't drawn
 	
 	// Button icons
 	private ImageIcon brush = new ImageIcon("PaintPanel/imagesource/ic_brush_black_24dp_1x.png");
@@ -133,6 +138,8 @@ public class PaintWindow extends JFrame {
 	 */
 	public PaintWindow(String ip, int port) throws UnknownHostException, IOException, InterruptedException
 	{
+		this.ip = ip;
+		this.port = port;
 		// Creating connection to server
 		this.paintClient = new PaintClient(ip, port);
 		this.paintClient.start();
@@ -147,16 +154,16 @@ public class PaintWindow extends JFrame {
 		this.createColorChooser();
 		this.createFileChooser();
 		this.createImageChooser();
-		this.commentp = new CommentPanel(this);
-		this.scp = new SendCommentPanel(this);
+		this.acp = new AllCommentPane(this, ip, port + 2);
+		this.commentp = new CommentPanel(this.acp);
+		this.scp = new SendCommentPanel(this.acp);
 		// Adding JPanels to JFrame
 		this.add(PaintWindow.paintPanel, BorderLayout.CENTER);
 		this.add(this.toolbar, BorderLayout.LINE_START);
-		//this.add(this.chatPanel, BorderLayout.LINE_END);
+		this.add(this.chatPanel, BorderLayout.LINE_END);
 		
 	//Please give it a better layout!
-		this.add(this.commentp, BorderLayout.LINE_END);
-		this.add(this.scp, BorderLayout.AFTER_LAST_LINE);
+		this.add(this.acp, BorderLayout.AFTER_LAST_LINE);
 		// Fixing window dimensions
 		this.setPreferredSize(WINDOW_SIZE);
 		this.setResizable(false);
@@ -582,4 +589,35 @@ public class PaintWindow extends JFrame {
 	{
 		this.commentCount = count;
 	}
+	
+	public void setPrintFlag(int i)
+	{
+		this.printCommentFlag = i;
+	}
+	
+	public int getPrintFlag()
+	{
+		return this.printCommentFlag;
+	}
+	
+	public void setCircleFLag(int i)
+	{
+		this.circleCommentFlag = i;
+	}
+	
+	public int getCircleFlag()
+	{
+		return this.circleCommentFlag;
+	}
+	
+	public SendCommentPanel getSTP()
+	{
+		return this.scp;
+	}
+	
+	public AllCommentPane getACP()
+	{
+		return this.acp;
+	}
+	
 }

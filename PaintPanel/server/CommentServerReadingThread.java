@@ -1,15 +1,15 @@
 package server;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
 
-public class ChatServerReadingThread extends Thread
+public class CommentServerReadingThread extends Thread
 {
 	private BufferedReader incomingText;
-	private ChatServerClientThread ct;
+	private CommentServerClientThread ct;
 	private PaintServer server;
 
-	public ChatServerReadingThread(BufferedReader br, ChatServerClientThread ct)
+	public CommentServerReadingThread(BufferedReader br, CommentServerClientThread ct)
 	{
 		this.incomingText = br;
 		this.ct = ct;
@@ -24,16 +24,17 @@ public class ChatServerReadingThread extends Thread
 			
 			while((inc = this.incomingText.readLine()) != null)
 			{
+			System.out.println("comment reading initiated");
 				int i;
-				for (i = 0; i < this.server.getChatClientList().size(); i++)
+				for (i = 0; i < this.server.getCommentClientList().size(); i++)
 				{
-					if (this.server.getChatClientList().get(i).equals(this.ct))
+					if (this.server.getCommentClientList().get(i).equals(this.ct))
 					{
 						
 					}
 					else
 					{
-						this.server.getChatClientList().get(i).sendMessage(inc);
+						this.server.getCommentClientList().get(i).sendMessage(inc);
 						System.out.println("I am sending out the message to client " + i + "\n");
 					}
 				}
@@ -49,3 +50,5 @@ public class ChatServerReadingThread extends Thread
 
 	}
 }
+
+

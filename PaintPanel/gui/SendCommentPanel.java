@@ -14,15 +14,16 @@ import javax.swing.ScrollPaneConstants;
 import chatUI.MainWindow;
 import listeners.CommentListener;
 import listeners.EnterKeyListener;
+import listeners.EnterKeyListenerComment;
 import listeners.SendButtonListener;
 
 public class SendCommentPanel extends JPanel{
-	private PaintWindow pw;
+	private AllCommentPane pw;
 	private JButton sendButton;
 	public  JTextArea jta;
 	public JScrollPane paneScroll;
 	
-	public SendCommentPanel(PaintWindow pw) {
+	public SendCommentPanel(AllCommentPane pw) {
 		// TODO Auto-generated constructor stub
 		this.pw = pw;
 		this.setLayout(new BorderLayout());
@@ -37,7 +38,7 @@ public class SendCommentPanel extends JPanel{
 
 		this.jta.requestFocus();
 		this.sendButton.addActionListener(new CommentListener(this.pw, this.jta));
-		//this.jta.addKeyListener(new CommentKeyListener(this.pw, this.jta));
+		this.jta.addKeyListener(new EnterKeyListenerComment(this.pw, this.jta));
 //		this.jta.getDocument().addDocumentListener(new InputMessageListener(this, this.jta));
 		this.jta.setBackground(Color.WHITE);
 		this.add(this.jta, BorderLayout.CENTER);
