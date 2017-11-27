@@ -170,6 +170,11 @@ public class DoodlePanel extends JPanel {
 		this.repaint();
 	}
 	
+	/**
+	 * Merges the various layers of the doodle panel into one BufferedImage of type ARGB for file types that preserve transparency.
+	 * @param ArrayList of layers of the doodle panel
+	 * @return the merged layers as a single BufferedImage
+	 */
 	public BufferedImage mergeARGBLayers(ArrayList<BufferedImage> layers)
 	{
 		BufferedImage mergedImage = new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB);
@@ -183,6 +188,11 @@ public class DoodlePanel extends JPanel {
 		return mergedImage;
 	}
 	
+	/**
+	 * Merges the various layers of the doodle panel into one BufferedImage of type RGB for file types that do not preserve transparency.
+	 * @param ArrayList of layers of the doodle panel
+	 * @return the merge Layers as a single BufferedImage
+	 */
 	public BufferedImage mergeRGBLayers(ArrayList<BufferedImage> layers)
 	{
 		BufferedImage mergedImage = new BufferedImage(650, 540, BufferedImage.TYPE_INT_RGB);

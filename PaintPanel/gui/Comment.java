@@ -23,6 +23,12 @@ public class Comment extends JPanel {
 	private JTextArea commentDisplay;
 	private Dimension HEADER_SIZE = new Dimension(600, 20);
 	
+	/**
+	 * Creates an instance of a comment with a corresponding index and message.
+	 * @param _pw the currrent PaintWindow
+	 * @param _index the comment index number
+	 * @param _comment the contents of the comment
+	 */
 	public Comment(PaintWindow _pw, int _index, String _comment) {
 		this.pw = _pw;
 		this.index = _index;

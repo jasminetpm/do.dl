@@ -6,6 +6,11 @@ import java.awt.event.ActionListener;
 
 import gui.PaintWindow;
 
+/**
+ * Listener for the cancel button on the color picker dialog.
+ * 
+ *
+ */
 public class ColorCancelListener implements ActionListener {
 	private PaintWindow myWindow;
 	
@@ -15,6 +20,9 @@ public class ColorCancelListener implements ActionListener {
 	}
 
 	@Override
+	/**
+	 * sets color and updates color chooser button icon.
+	 */
 	public void actionPerformed(ActionEvent e) 
 	{
 		this.myWindow.setColor(this.myWindow.getColor()); // returns current color

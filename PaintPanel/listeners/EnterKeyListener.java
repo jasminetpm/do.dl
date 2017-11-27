@@ -8,10 +8,19 @@ import javax.swing.JTextArea;
 import chatUI.MainWindow;
 import serverDealer.SendString;
 
+/**
+ * Listener for the enter key in chat GUI
+ *
+ */
 public class EnterKeyListener implements KeyListener {
 	private MainWindow mw;
 	private JTextArea jta;
 	
+	/**
+	 * Creates instance for enter key listener
+	 * @param mw current chat window
+	 * @param jta chat text area
+	 */
 	public EnterKeyListener(MainWindow mw, JTextArea jta)
 	{
 		this.mw = mw;
@@ -19,6 +28,9 @@ public class EnterKeyListener implements KeyListener {
 	}
 
 	@Override
+	/**
+	 * Sends message when enter key is pressed and checks if message is empty.
+	 */
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_ENTER)
 		{
@@ -44,6 +56,11 @@ public class EnterKeyListener implements KeyListener {
 		
 	}
 	
+	/**
+	 * Checks if message is empty.
+	 * @param input current string
+	 * @throws NullPointerException if text is empty
+	 */
 	public void checkMessage(String input) throws NullPointerException
 	{
 		if (input.equals(""))
@@ -58,6 +75,9 @@ public class EnterKeyListener implements KeyListener {
 	}
 
 	@Override
+	/**
+	 * Resets text box after message sent.
+	 */
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER)
 		{
