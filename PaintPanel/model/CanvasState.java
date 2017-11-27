@@ -34,7 +34,7 @@ public class CanvasState implements Serializable {
         ois.defaultReadObject();
         this.layers = new ArrayList<BufferedImage>();
         this.instructionLog = (LinkedList<Instruction>) ois.readObject();
-        while (this.layers.size() < 4) {
+        while (this.layers.size() < 5) {
         		byteImg = ImageIO.read(ois);
         		if (byteImg != null) {
         			// convert the read image to the appropriate type

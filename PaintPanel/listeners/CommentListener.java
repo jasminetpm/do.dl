@@ -35,15 +35,17 @@ public class CommentListener implements ActionListener{
 			{
 				String message = this.jta.getText();
 				
-				/*
+				
 				checkMessage(message);
 				try 
 				{
-					new SendString(this.pw, message);
+					new SendString(this.pw.getMw(), message);
 				} catch (UnsupportedEncodingException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}*/
+				}
+				
+				
 				this.jta.setText(null);
 				this.jta.repaint();
 				this.pw.getACP().repaint();

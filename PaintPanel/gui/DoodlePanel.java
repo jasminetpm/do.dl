@@ -174,7 +174,7 @@ public class DoodlePanel extends JPanel {
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		for (int i=0; i < 4; i++) {
+		for (int i=0; i < 5; i++) {
 			g.drawImage(this.displayLayers.get(i), 0, 0, null);
 			if (i == this.myWindow.getCurrentLayer()) {
 				g.drawImage(this.previewLayer, 0, 0, null);

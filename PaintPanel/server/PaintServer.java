@@ -16,9 +16,11 @@ import model.UndoInstruction;
 public class PaintServer {
 	private ServerSocket paintServSock;
 	private ServerSocket chatServSock;
+	private ServerSocket commentServSock;
 	private static int clientId = 0;
 	private static ArrayList<ConnectionHandler> paintClientList = new ArrayList<ConnectionHandler>();
 	private static ArrayList<ChatServerClientThread> chatClientList = new ArrayList<ChatServerClientThread>();
+	private static ArrayList<CommentServerClientThread> commentClientList = new ArrayList<CommentServerClientThread>();
 	private static ArrayList<BufferedImage> baseLayers;
 	private static LinkedList<Instruction> instructionLog;
 	
@@ -26,8 +28,9 @@ public class PaintServer {
 		try {
 			this.paintServSock = new ServerSocket(port);
 			this.chatServSock = new ServerSocket(port + 1);
+			this.commentServSock = new ServerSocket(port + 2);
 			PaintServer.baseLayers = new ArrayList<BufferedImage>();
-			for (int i = 0; i < 4; i++) 
+			for (int i = 0; i < 5; i++) 
 			{
 				PaintServer.baseLayers.add(new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB));
 			}
@@ -63,20 +66,30 @@ public class PaintServer {
 		return PaintServer.chatClientList;
 	}
 	
+	public ArrayList<CommentServerClientThread> getCommentClientList()
+	{
+		return PaintServer.commentClientList;
+	}
+	
 	public void acceptClientLoop() {
 		while (true) {
 			Socket pss;
 			Socket css;
+			Socket coss;
 			try {
 				pss = this.paintServSock.accept();
 				css = this.chatServSock.accept();
+				coss = this.commentServSock.accept();
 				ConnectionHandler paintTh = new ConnectionHandler(pss, PaintServer.clientId);
 				ChatServerClientThread chatTh = new ChatServerClientThread(css, this);
+				CommentServerClientThread coTh = new CommentServerClientThread(coss, this);
 				PaintServer.paintClientList.add(paintTh);
 				PaintServer.chatClientList.add(chatTh);
+				PaintServer.commentClientList.add(coTh);
 				PaintServer.clientId++;
 				paintTh.start();
 				chatTh.start();
+				coTh.start();
 				System.out.println("Just accepted a client. Going to the next iteration");
 			} catch (IOException e) {
 				e.printStackTrace();

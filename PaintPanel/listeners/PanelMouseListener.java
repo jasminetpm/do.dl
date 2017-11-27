@@ -140,6 +140,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 		case 6:	// Draw the circle for comment
 			setEndPoint(e.getX(), e.getY());
 			this.myWindow.incrementCommentCircleCount();
+			this.myWindow.setCurrentLayer(4);
 			
 			if (this.myWindow.getCircleFlag() == 1)
 			
