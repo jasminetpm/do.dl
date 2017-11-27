@@ -31,6 +31,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.imageio.ImageIO;
@@ -378,7 +379,7 @@ public class PaintWindow extends JFrame {
 	}
 	
 	public String getCommentText() {
-		return this.commentEntry.getText();
+		return JOptionPane.showInputDialog("Enter comment here:");
 	}
 	
 	public ArrayList<CommentInstruction> getCommentList() {
@@ -411,8 +412,8 @@ public class PaintWindow extends JFrame {
 		if (this.currentCommentInstruction == null) {
 			System.out.println("Please drag a circle to indicate where you are commenting on");
 		} else {
-			this.currentCommentInstruction.setCommentText(this.commentEntry.getText());
-			if (this.currentCommentInstruction.getCommentText().equals("")) {
+			this.currentCommentInstruction.setCommentText(this.currentCommentInstruction.getComment());
+			if (this.currentCommentInstruction.getComment().equals("")) {
 				System.out.println("Please enter your comment");
 			} else {
 				this.commentIndex++;
