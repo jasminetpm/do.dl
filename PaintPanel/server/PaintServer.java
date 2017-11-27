@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import model.CanvasState;
+import model.CommentInstruction;
 import model.Instruction;
 import model.UndoInstruction;
 
@@ -21,13 +22,14 @@ public class PaintServer {
 	private static ArrayList<ChatServerClientThread> chatClientList = new ArrayList<ChatServerClientThread>();
 	private static ArrayList<BufferedImage> baseLayers;
 	private static LinkedList<Instruction> instructionLog;
+	private static ArrayList<CommentInstruction> comments = new ArrayList<CommentInstruction>();
 	
 	public PaintServer(int port) {
 		try {
 			this.paintServSock = new ServerSocket(port);
 			this.chatServSock = new ServerSocket(port + 1);
 			PaintServer.baseLayers = new ArrayList<BufferedImage>();
-			for (int i = 0; i < 4; i++) 
+			for (int i = 0; i < 5; i++) 
 			{
 				PaintServer.baseLayers.add(new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB));
 			}
@@ -122,10 +124,19 @@ public class PaintServer {
 								connection.sendInstruction(instr);
 							}
 						}
+					} else if (instr instanceof CommentInstruction) {
+						PaintServer.comments.add((CommentInstruction) instr);
+						for (ConnectionHandler connection : PaintServer.paintClientList) {
+							if (connection.id != instr.getClientId()) {
+								System.out.println("Sending instruction to client #" + connection.id);
+								connection.sendInstruction(instr);
+							}
+						}
 					} else {
 						PaintServer.executeInstruction(instr);
 						for (ConnectionHandler connection : PaintServer.paintClientList) {
 							if (connection.id != instr.getClientId()) {
+								System.out.println("Sending instruction to client #" + connection.id);
 								connection.sendInstruction(instr);
 							}
 						}
@@ -157,6 +168,7 @@ public class PaintServer {
 			this.oos.writeObject(currentState);
 			this.oos.flush();
 			this.oos.reset();
+			System.out.println("Done sending!");
 		}
 		
 		public void sendId(Integer id) {

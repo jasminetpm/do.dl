@@ -18,6 +18,8 @@ public class ToolSelectorListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("Switched to type: " + this.toolId);
+		this.pw.getDoodlePanel().clearPreviewLayer();
+		this.pw.clearCommentInstruction();
 		if (this.toolId < 8) {
 			this.pw.setToolType(this.toolId);
 		} else if (this.toolId == 9) {
