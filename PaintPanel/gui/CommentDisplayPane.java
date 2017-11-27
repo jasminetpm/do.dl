@@ -39,7 +39,7 @@ public class CommentDisplayPane extends JPanel {
 			this.repaint();
 		} else {
 			for (CommentInstruction comment : this.pw.getCommentList()) {
-				this.wrapper.add(new Comment(this.pw, comment.getIndex(), comment.getCommentText()));
+				this.wrapper.add(new Comment(this.pw, comment.getIndex(), comment.getComment()));
 			}
 			this.revalidate();
 			this.repaint();

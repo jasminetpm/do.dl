@@ -33,7 +33,7 @@ public class CommentInstruction extends Instruction {
 		super.clientId = _clientId;
 	}
 	
-	public String getCommentText() {
+	public String getComment() {
 		return this.comment;
 	}
 	
