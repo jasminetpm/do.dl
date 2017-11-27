@@ -14,16 +14,19 @@ public class CanvasState implements Serializable {
 	private transient ArrayList<BufferedImage> layers;
 	private LinkedList<Instruction> instructionLog;
 	private ArrayList<CommentInstruction> comments;
+	private int commentIndex;
 
 	public CanvasState(ArrayList<BufferedImage> _layers, LinkedList<Instruction> _instructionLog,
-			ArrayList<CommentInstruction> _comments) {
+			ArrayList<CommentInstruction> _comments, int _index) {
 		this.layers = _layers;
 		this.instructionLog = _instructionLog;
 		this.comments = _comments;
+		this.commentIndex = _index;
 	}
 
 	private void writeObject(ObjectOutputStream oos) throws IOException {
 		oos.defaultWriteObject();
+		oos.writeInt(this.commentIndex);
 		oos.writeObject(this.instructionLog);
 		oos.writeObject(this.comments);
 		for (BufferedImage layer : this.layers) {
@@ -37,6 +40,7 @@ public class CanvasState implements Serializable {
 
 		ois.defaultReadObject();
 		this.layers = new ArrayList<BufferedImage>();
+		this.commentIndex = ois.readInt();
 		this.instructionLog = (LinkedList<Instruction>) ois.readObject();
 		this.comments = (ArrayList<CommentInstruction>) ois.readObject();
 		while (this.layers.size() < 5) {
@@ -56,6 +60,10 @@ public class CanvasState implements Serializable {
 
 	public LinkedList<Instruction> getLog() {
 		return this.instructionLog;
+	}
+	
+	public int getIndex() {
+		return this.commentIndex;
 	}
 	
 	public ArrayList<CommentInstruction> getComments() {

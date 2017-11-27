@@ -373,8 +373,12 @@ public class PaintWindow extends JFrame {
 		return this.clientId;
 	}
 	
+	public void setCommentIndex(int index) {
+		PaintWindow.commentIndex = index;
+	}
+	
 	public int getCommentIndex() {
-		return this.commentIndex;
+		return PaintWindow.commentIndex;
 	}
 	
 	public String getCommentText() {

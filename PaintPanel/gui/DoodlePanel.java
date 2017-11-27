@@ -47,14 +47,35 @@ public class DoodlePanel extends JPanel {
 		this.addMouseMotionListener(pml);
 	}
 	
+	/**
+	 * Get the DoodlePanel's base layers. The base layers are used together with the
+	 * instructionLog to reconstruct the picture in case the user wants to undo an
+	 * action.
+	 * 
+	 * @return the DoodlePanel's base layers
+	 */
 	public ArrayList<BufferedImage> getBaseLayers() {
 		return this.baseLayers;
 	}
 	
+	/**
+	 * Get the DoodlePanel's display layers. This is the object which is actually
+	 * rendered on screen.
+	 * 
+	 * @return the DoodlePanel's display layers
+	 */
 	public ArrayList<BufferedImage> getDisplayLayers() {
 		return this.displayLayers;
 	}
 	
+	/**
+	 * Get the DoodlePanel's preview layer. This layer is necessary for the user to
+	 * have real-time feedback when drawing the circle and square shapes. It is
+	 * essentially just a transparent layer which we can clear and draw on mouse
+	 * dragged so that we don't have multiple ovals/rectangles being drawn.
+	 * 
+	 * @return the DoodlePanel's preview layer.
+	 */
 	public BufferedImage getPreviewLayer() {
 		return this.previewLayer;
 	}
@@ -82,6 +103,7 @@ public class DoodlePanel extends JPanel {
 		this.instructionLog = currentState.getLog();
 		this.baseLayers = currentState.getLayers();
 		this.myWindow.setComments(currentState.getComments());
+		this.myWindow.setCommentIndex(currentState.getIndex());
 
 		// copy the base layers
 		for (BufferedImage img : this.baseLayers) {
