@@ -7,17 +7,21 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 
+import gui.PaintWindow;
 import model.CanvasState;
 import model.CommentInstruction;
 import model.Instruction;
+import model.RemoveCommentInstruction;
 import model.UndoInstruction;
 
 public class PaintServer {
 	private ServerSocket paintServSock;
 	private ServerSocket chatServSock;
 	private static int clientId = 0;
+	private static int commentIndex = 0;
 	private static ArrayList<ConnectionHandler> paintClientList = new ArrayList<ConnectionHandler>();
 	private static ArrayList<ChatServerClientThread> chatClientList = new ArrayList<ChatServerClientThread>();
 	private static ArrayList<BufferedImage> baseLayers;
@@ -38,6 +42,17 @@ public class PaintServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static void removeComment(int index) {
+		Iterator<CommentInstruction> it = PaintServer.comments.iterator();
+		while (it.hasNext()) {
+		   CommentInstruction nextItem = it.next();
+		   if (nextItem.getIndex() == index) {
+		      it.remove();
+		   }
+		}
+		System.out.println(PaintServer.comments);
 	}
 	
 	public static void executeInstruction(Instruction instr) {
@@ -126,6 +141,16 @@ public class PaintServer {
 						}
 					} else if (instr instanceof CommentInstruction) {
 						PaintServer.comments.add((CommentInstruction) instr);
+						PaintServer.commentIndex++;
+						for (ConnectionHandler connection : PaintServer.paintClientList) {
+							if (connection.id != instr.getClientId()) {
+								System.out.println("Sending instruction to client #" + connection.id);
+								connection.sendInstruction(instr);
+							}
+						}
+					} else if (instr instanceof RemoveCommentInstruction) {
+						RemoveCommentInstruction rci = (RemoveCommentInstruction) instr;
+						PaintServer.removeComment(rci.getIndex());
 						for (ConnectionHandler connection : PaintServer.paintClientList) {
 							if (connection.id != instr.getClientId()) {
 								System.out.println("Sending instruction to client #" + connection.id);
@@ -163,7 +188,7 @@ public class PaintServer {
 		
 		public void sendCanvasState() throws IOException {
 			System.out.println("Trying to send canvas state...");
-			CanvasState currentState = new CanvasState(PaintServer.baseLayers, PaintServer.instructionLog);
+			CanvasState currentState = new CanvasState(PaintServer.baseLayers, PaintServer.instructionLog, PaintServer.comments, PaintServer.commentIndex);
 			System.out.println(currentState);
 			this.oos.writeObject(currentState);
 			this.oos.flush();

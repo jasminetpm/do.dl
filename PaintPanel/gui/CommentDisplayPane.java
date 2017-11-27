@@ -34,17 +34,17 @@ public class CommentDisplayPane extends JPanel {
 	
 	public void repopulateComments() {
 		this.wrapper.removeAll();
-		for (CommentInstruction comment : this.pw.getCommentList()) {
-			this.wrapper.add(new Comment(comment.getIndex(), comment.getCommentText()));
+		if (this.pw.getCommentList().isEmpty()) {
+			this.revalidate();
+			this.repaint();
+		} else {
+			for (CommentInstruction comment : this.pw.getCommentList()) {
+				this.wrapper.add(new Comment(this.pw, comment.getIndex(), comment.getCommentText()));
+			}
+			this.revalidate();
+			this.repaint();
 		}
-		this.revalidate();
-		this.repaint();
-	}
-	
-	public void addComment(int index, String comment) {
-		System.out.println("Add comment: is it working?");
-		this.wrapper.add(new Comment(index, comment));
-		this.revalidate();
-		this.repaint();
+		
+		
 	}
 }
