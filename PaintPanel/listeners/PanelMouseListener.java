@@ -31,6 +31,7 @@ import model.CircleInstruction;
 import model.EraserInstruction;
 import model.RectangleInstruction;
 import model.TextBoxInstruction;
+import model.UploadImageInstruction;
 
 public class PanelMouseListener implements MouseListener, MouseMotionListener {
 
@@ -195,6 +196,11 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			{
 				BufferedImage originalImg = ImageIO.read(new File(this.myWindow.getChosenImagePath()));
 				_img.drawImage(originalImg, this.imageLocation.x, this.imageLocation.y, null);
+				UploadImageInstruction uploadImageInstr = new UploadImageInstruction(this.myWindow.getCurrentLayer(), this.imageLocation,
+						                                                             originalImg, this.myWindow.getClientId());
+				this.myWindow.getDoodlePanel().addInstruction(uploadImageInstr);
+				System.out.println("SENT INSTR:");
+				System.out.println(uploadImageInstr);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
