@@ -34,6 +34,7 @@ public class MainWindow extends JPanel
 	private String ip;
 	
 	
+	
 	public MainWindow(String ip, int port) throws UnknownHostException, IOException, InterruptedException
 	{
 		this.ip = ip;

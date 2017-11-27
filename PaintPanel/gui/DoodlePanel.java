@@ -28,10 +28,11 @@ public class DoodlePanel extends JPanel {
 	{
 		this.myWindow = pw;
 		this.pml = new PanelMouseListener(this.myWindow);
-		// add 4 layers
+		// add 5 layers
+		// I will use the fifth layer for the circles for commenting
 		this.baseLayers = new ArrayList<BufferedImage>();
 		this.displayLayers = new ArrayList<BufferedImage>();
-		for (int i = 0; i < 4; i++) 
+		for (int i = 0; i < 5; i++) 
 		{
 			this.baseLayers.add(new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB));
 			this.displayLayers.add(new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB));
