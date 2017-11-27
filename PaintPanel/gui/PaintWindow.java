@@ -39,10 +39,12 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
+import chatUI.CommentPanel;
 import chatUI.MainWindow;
 import listeners.ColorCancelListener;
 import listeners.ColorOKListener;
 import listeners.ColorPickerListener;
+import listeners.CommentButtonListener;
 import listeners.FontSizeListener;
 import listeners.LayerSelectorListener;
 import listeners.SaveButtonListener;
@@ -62,6 +64,7 @@ public class PaintWindow extends JFrame {
 	private JColorChooser jcc;
 	private JDialog colorDialog;
 	private JFileChooser fileChooser;
+	private CommentPanel commentp;
 	// Tool buttons
 	private JButton[] toolbarButtons = new JButton[10];
 	private JButton colorButton;
@@ -129,6 +132,7 @@ public class PaintWindow extends JFrame {
 		this.populateToolbar(); // Adds various buttons to toolbar
 		this.createColorChooser();
 		this.createFileChooser();
+		this.commentp = new CommentPanel(this);
 		// Adding JPanels to JFrame
 		this.add(PaintWindow.paintPanel, BorderLayout.CENTER);
 		this.add(this.toolbar, BorderLayout.LINE_START);
@@ -158,6 +162,8 @@ public class PaintWindow extends JFrame {
 			toolButtonSection.add(toolbarButtons[i]);
 		}
 		this.toolbar.add(toolButtonSection);
+		//Clicking the comment button
+		toolbarButtons[6].addActionListener(new CommentButtonListener(this));
 		// Setting file chooser
 		toolbarButtons[8].addActionListener(new SaveButtonListener(this));
 		// Setting color chooser
@@ -419,5 +425,14 @@ public class PaintWindow extends JFrame {
 	{
 		PaintWindow pw = new PaintWindow("127.0.0.1", 9873);
 	}
-
+	
+	public MainWindow getMw()
+	{
+		return this.chatPanel;
+	}
+	
+	public CommentPanel getCP()
+	{
+		return this.commentp;
+	}
 }

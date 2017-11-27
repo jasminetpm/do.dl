@@ -135,6 +135,26 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			this.myWindow.getDoodlePanel().repaint();
 			break;
 			
+		case 6:	// Draw the circle for comment
+			setEndPoint(e.getX(), e.getY());
+			
+			// get the preview layer
+			BufferedImage commentLayer = this.myWindow.getDoodlePanel().getPreviewLayer();
+			Graphics2D commentGraph = commentLayer.createGraphics();
+			
+			// clear it
+			commentGraph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			commentGraph.setComposite(AlphaComposite.Src);
+			commentGraph.setStroke(new BasicStroke(this.myWindow.getStrokeSize()));
+			commentGraph.setColor(new Color(0,0,0,0));
+			commentGraph.fillRect(0, 0, commentLayer.getWidth(), commentLayer.getHeight());
+			
+			// draw the oval and repaint
+			commentGraph.setColor(this.myWindow.getColor());
+			commentGraph.drawOval(Math.min(this.x1,this.x2), Math.min(this.y1,this.y2), Math.abs(this.x1-this.x2), Math.abs(this.y1-this.y2));
+			this.myWindow.getDoodlePanel().repaint();
+			break;
+			
 		}
 	}
 
