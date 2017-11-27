@@ -10,10 +10,26 @@ import chatUI.MainWindow;
 import chatUI.SendTextPanel;
 import serverDealer.SendString;
 
+/**
+ * listens to the send button for the chat
+ * @author Coco
+ * @version 1.0 Nov 2017
+ */
 public class SendButtonListener implements ActionListener{
+	/**
+	 * the MainWindow (i.e. the chatPanel) 
+	 */
 	private MainWindow mw;
+	/**
+	 * the JTextArea the chat messages are typed in
+	 */
 	private JTextArea jta;
 	
+	/**
+	 * the constructor 
+	 * @param mw: the MainWindow (i.e. the chatPanel)
+	 * @param jta: the JTextArea the chat messages are typed in
+	 */
 	public SendButtonListener(MainWindow mw, JTextArea jta)
 	{
 		this.mw = mw;
@@ -21,6 +37,9 @@ public class SendButtonListener implements ActionListener{
 	}
 
 	@Override
+	/**
+	 * what to do if the sned button is clicked
+	 */
 	public void actionPerformed(ActionEvent e) 
 	{
 		try 
@@ -46,6 +65,7 @@ public class SendButtonListener implements ActionListener{
 		
 	}
 	
+
 	public void checkMessage(String input) throws NullPointerException
 	{
 		if (input.equals(""))

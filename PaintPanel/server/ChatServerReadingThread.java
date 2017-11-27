@@ -3,12 +3,31 @@ package server;
 import java.io.*;
 import java.util.*;
 
+/**
+ * generate a reading thread to deal with information sent to the server
+ * @author Coco
+ * @version 1.0 Nov 2017
+ */
 public class ChatServerReadingThread extends Thread
 {
+	/**
+	 * the incomingText read by BufferedReader
+	 */
 	private BufferedReader incomingText;
+	/**
+	 * the chatServerClientThread associated
+	 */
 	private ChatServerClientThread ct;
+	/**
+	 * the server it uses
+	 */
 	private PaintServer server;
 
+	/**
+	 * constructor
+	 * @param br: the incomingText read by BufferedReader
+	 * @param ct: the chatServerClientThread associated
+	 */
 	public ChatServerReadingThread(BufferedReader br, ChatServerClientThread ct)
 	{
 		this.incomingText = br;
@@ -17,6 +36,9 @@ public class ChatServerReadingThread extends Thread
 	}
 
 	@Override
+	/**
+	 * run the thread
+	 */
 	public void run()
 	{
 		String inc = "";
