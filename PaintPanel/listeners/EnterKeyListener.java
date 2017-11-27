@@ -12,6 +12,11 @@ public class EnterKeyListener implements KeyListener {
 	private MainWindow mw;
 	private JTextArea jta;
 	
+	/**
+	 * Constructs an instance of the listener in the given JPanel and JTextArea.
+	 * @param mw the current JPanel
+	 * @param jta the JTextArea in which the message is being entered
+	 */
 	public EnterKeyListener(MainWindow mw, JTextArea jta)
 	{
 		this.mw = mw;
@@ -19,6 +24,9 @@ public class EnterKeyListener implements KeyListener {
 	}
 
 	@Override
+	/**
+	 * Sends the String in the JTextField when the ENTER key is pressed if there is a message typed.
+	 */
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_ENTER)
 		{
@@ -44,6 +52,11 @@ public class EnterKeyListener implements KeyListener {
 		
 	}
 	
+	/**
+	 * Checks the given strings and throws an exception if the string is empty.
+	 * @param input the given string to be checked
+	 * @throws NullPointerException if the string is empty
+	 */
 	public void checkMessage(String input) throws NullPointerException
 	{
 		if (input.equals(""))
@@ -55,7 +68,6 @@ public class EnterKeyListener implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

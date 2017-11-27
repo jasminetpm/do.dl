@@ -16,7 +16,17 @@ public class TextBoxInstruction extends Instruction {
 	private String textInput;
 	private Point textLocation;
 
-	public TextBoxInstruction(Color _color, Font _font, String _textInput, int _layer, Point _textLocation, int _clientId) {
+	/**
+	 * Constructs an instance of the instructions for the text function.
+	 * @param _color the color of the text
+	 * @param _font the font of the text
+	 * @param _textInput the text to be printed
+	 * @param _layer the layer on which the text should be printed
+	 * @param _textLocation the coordinates where the text should be printed
+	 * @param _clientId the clientId from which the instructions are sent
+	 */
+	public TextBoxInstruction(Color _color, Font _font, String _textInput, int _layer, Point _textLocation, int _clientId) 
+	{
 		this.color = _color;
 		this.font = _font;
 		this.textInput = _textInput;
@@ -26,7 +36,11 @@ public class TextBoxInstruction extends Instruction {
 	}
 
 	@Override
-	public void execute(ArrayList<BufferedImage> layers) {
+	/**
+	 * The instructions to be executed on the given layer. 
+	 */
+	public void execute(ArrayList<BufferedImage> layers) 
+	{
 		BufferedImage img = layers.get(this.layer);
 		Graphics2D g = img.createGraphics();
 		
@@ -38,6 +52,9 @@ public class TextBoxInstruction extends Instruction {
 	}
 	
 	@Override
+	/**
+	 * The given instructions as a String.
+	 */
 	public String toString() {
 		return ("TextBoxInstruction(color: " + this.color + "\nfont: " + this.font +
 				"\ntextInput: " + this.textInput + "\nlayer: " + this.layer + ", \nlocation: "

@@ -123,6 +123,14 @@ public class PaintWindow extends JFrame {
 	private PaintClient paintClient;
 	private static int clientId;
 	
+	/**
+	 * Constructs a new PaintWindow with a specified IP address and port number
+	 * @param ip the IP address to connect to
+	 * @param port the port of the PaintServer
+	 * @throws UnknownHostException 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public PaintWindow(String ip, int port) throws UnknownHostException, IOException, InterruptedException
 	{
 		// Creating connection to server
@@ -158,6 +166,9 @@ public class PaintWindow extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
+	/**
+	 * Constructs the layout of the toolbar of the doodle panel. Adds JButtons and JSpinners with the relevant listeners. 
+	 */
 	private void populateToolbar()
 	{
 		// Setting toolbar buttons
@@ -215,7 +226,13 @@ public class PaintWindow extends JFrame {
 		this.toolbar.add(layerToolSection);
 	}
 	
-	// Currently unimplemented -- to be used to scale icons to standard resolution
+	/**
+	 *  Currently unimplemented: to be used to scale icons to a standard resolution
+	 * @param icon the image to be resized
+	 * @param newWidth the new width
+	 * @param newHeight the new height
+	 * @return a resized version of the image
+	 */
 	private static Icon resizeIcon(ImageIcon icon, int newWidth, int newHeight)
 	{
 		Image img = icon.getImage();
@@ -223,6 +240,9 @@ public class PaintWindow extends JFrame {
 		return new ImageIcon(resizedImage);
 	}
 	
+	/**
+	 * Constructs a basic color chooser with the relevant listeners.
+	 */
 	private void createColorChooser()
 	{
 		this.jcc = new JColorChooser();
@@ -243,11 +263,17 @@ public class PaintWindow extends JFrame {
                                                       new ColorCancelListener(this));
 	}
 	
+	/**
+	 * Shows the color chooser dialog.
+	 */
 	public void viewColorChooser()
 	{
 		this.colorDialog.setVisible(true);
 	}
 	
+	/**
+	 * Creates a file chooser dialog for saving files. Includes format filters to select format of the saved file.
+	 */
 	private void createFileChooser()
 	{
 		FileFilter pngFilter = new FileNameExtensionFilter("PNG File", "png");
@@ -259,6 +285,9 @@ public class PaintWindow extends JFrame {
 		this.fileChooser.addChoosableFileFilter(jpgFilter);
 	}
 	
+	/**
+	 * Shows the file chooser dialog.
+	 */
 	public void viewFileChooser()
 	{
 		int returnVal = this.fileChooser.showSaveDialog(this);
@@ -297,11 +326,18 @@ public class PaintWindow extends JFrame {
 		}
 	}
 	
+	/**
+	 * Creates a file chooser dialog to select an image to upload.
+	 */
 	private void createImageChooser()
 	{
 		this.imageChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 	}
 	
+	/**
+	 * Returns the absolute path of the file chosen by the user in the upload file chooser dialog.
+	 * @return the absolute path of the file chosen by the user as a String
+	 */
 	public String getChosenImagePath()
 	{
 		int returnVal = this.imageChooser.showOpenDialog(this);
@@ -313,36 +349,63 @@ public class PaintWindow extends JFrame {
 		return this.imageChosenPath;
 	}
 	
+	/**
+	 * Returns the current selected font size.
+	 * @return the current font size as an integer value
+	 */
 	public int getFontSize()
 	{
 		return this.fontSize;
 	}
 	
+	/**
+	 * Sets the font size to a specified integer value.
+	 * @param i the font size to be set
+	 */
 	public void setFontSize(int i)
 	{
 		this.fontSize = i;
 	}
 	
+	/**
+	 * Returns the current selected stroke size.
+	 * @return the current stroke size as an integer value
+	 */
 	public int getStrokeSize()
 	{
 		return this.strokeSize;
 	}
 	
+	/**
+	 * Sets the stroke size to a specified integer value. 
+	 * @param i the stroke size to be set
+	 */
 	public void setStrokeSize(int i)
 	{
 		this.strokeSize = i;
 	}
 	
+	/**
+	 * Returns the current selected color.
+	 * @return the current color selected
+	 */
 	public Color getColor()
 	{
 		return this.currentColor;
 	}
 	
+	/**
+	 * Sets the color to a specified color.
+	 * @param C the color to be set
+	 */
 	public void setColor(Color C)
 	{
 		this.currentColor = C;
 	}
 	
+	/**
+	 * Sets the color chooser icon to be a filled square of the current selected color.
+	 */
 	public void setColorChooserIcon()
 	{
 		BufferedImage colorBox = new BufferedImage(40, // Dimensions hard coded
@@ -354,34 +417,67 @@ public class PaintWindow extends JFrame {
 		this.colorButton.setIcon(new ImageIcon(colorBox));
 	}
 	
+	/**
+	 * Sends the corresponding instruction to the server. 
+	 * @param instr the set of instructions to be sent of type Instruction
+	 * @see Instruction.java
+	 */
 	public void sendInstruction(Instruction instr) {
 		this.paintClient.sendInstruction(instr);
 	}
 	
+	/**
+	 * Returns the current instance of the DoodlePanel.
+	 * @return the current DoodlePanel
+	 */
 	public DoodlePanel getDoodlePanel() {
 		return PaintWindow.paintPanel;
 	}
 	
+	/**
+	 * Sets the tool type to a corresponding integer value.
+	 * @param type the integer value for the given tool
+	 */
 	public void setToolType(int type) {
 		this.toolType = type;
 	}
 	
+	/**
+	 * Returns the integer value of the given tool.
+	 * @return the integer value of the tool
+	 */
 	public int getToolType() {
 		return this.toolType;
 	}
 	
+	/**
+	 * Sets the current layer to a specified integer.
+	 * @param layer the layer number to be set
+	 */
 	public void setCurrentLayer(int layer) {
 		this.currentLayer = layer;
 	}
 	
+	/**
+	 * Returns the current layer number.
+	 * @return an integer of the current layer
+	 */
 	public int getCurrentLayer() {
 		return this.currentLayer;
 	}
 	
+	/**
+	 * Sets the ID of a person who connects in the form of an assigned integer.
+	 * @param id the integer given corresponding to the connecting client
+	 */
 	public void setClientId(int id) {
 		this.clientId = id;
 	}
 	
+	/**
+	 * Returns the ID of the given client.
+	 * @return the ID of the given client as an integer value
+	 */
 	public int getClientId() {
 		return this.clientId;
 	}

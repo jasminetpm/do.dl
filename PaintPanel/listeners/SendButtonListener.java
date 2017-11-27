@@ -14,6 +14,11 @@ public class SendButtonListener implements ActionListener{
 	private MainWindow mw;
 	private JTextArea jta;
 	
+	/**
+	 * Constructs an instance of the listener in the given JPanel and JTextArea.
+	 * @param mw the current JPanel
+	 * @param jta the JTextArea in which the message is being entered
+	 */
 	public SendButtonListener(MainWindow mw, JTextArea jta)
 	{
 		this.mw = mw;
@@ -21,6 +26,9 @@ public class SendButtonListener implements ActionListener{
 	}
 
 	@Override
+	/**
+	 * Sends the String in the text field when the given button is pressed if there is a message typed.
+	 */
 	public void actionPerformed(ActionEvent e) 
 	{
 		try 
@@ -46,6 +54,11 @@ public class SendButtonListener implements ActionListener{
 		
 	}
 	
+	/**
+	 * Checks the given strings and throws an exception if the string is empty.
+	 * @param input the given string to be checked
+	 * @throws NullPointerException if the string is empty
+	 */
 	public void checkMessage(String input) throws NullPointerException
 	{
 		if (input.equals(""))
