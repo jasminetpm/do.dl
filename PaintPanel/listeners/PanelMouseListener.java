@@ -12,11 +12,15 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -42,6 +46,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 	private String textInput;
 	private Color windowColor;
 	private Point imageLocation;
+	private byte[] imageInByte;
 
 	public PanelMouseListener(PaintWindow pw) {
 		this.myWindow = pw;
@@ -194,11 +199,22 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			this.imageLocation = new Point(e.getX(), e.getY());
 			try 
 			{
-				BufferedImage originalImg = ImageIO.read(new File(this.myWindow.getChosenImagePath()));
+				File file = new File(this.myWindow.getChosenImagePath());			
+				BufferedImage originalImg = ImageIO.read(file);
+				
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ImageIO.write(originalImg, "jpg", baos);
+				baos.flush();
+				this.imageInByte = baos.toByteArray();
+				System.out.println("IMAGE HAS BEEN WRITTEN TO BYTES");
+				baos.close();
+				
+//				byte[] data = Files.readAllBytes(file.toPath());
 				_img.drawImage(originalImg, this.imageLocation.x, this.imageLocation.y, null);
 				UploadImageInstruction uploadImageInstr = new UploadImageInstruction(this.myWindow.getCurrentLayer(), this.imageLocation,
-						                                                             originalImg, this.myWindow.getClientId());
+						this.imageInByte, this.myWindow.getClientId());
 				this.myWindow.getDoodlePanel().addInstruction(uploadImageInstr);
+				System.out.println("LENGTH OF BYTE ARRAY!!!" + this.imageInByte.length);
 				System.out.println("SENT INSTR:");
 				System.out.println(uploadImageInstr);
 			} catch (IOException e1) {
@@ -326,6 +342,13 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 		this.x2 = x;
         this.y2 = y;
     }
+	
+	public BufferedImage deepCopy(BufferedImage bi) {
+		 ColorModel cm = bi.getColorModel();
+		 boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		 WritableRaster raster = bi.copyData(null);
+		 return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+	}
 	
 
 }
