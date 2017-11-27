@@ -55,7 +55,7 @@ public class MainWindow extends JPanel
 		this.name = this.userName;
 		
 		this.setBorder(BorderFactory.createEmptyBorder(1, 5, 1, 1));
-		this.setPreferredSize(new Dimension(260, 540));
+		this.setPreferredSize(new Dimension(260, 640));
 	}
 	
 	

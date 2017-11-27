@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -8,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -49,19 +51,23 @@ import listeners.SaveButtonListener;
 import listeners.StrokeSizeListener;
 import listeners.ToolSelectorListener;
 import model.CanvasState;
+import model.CommentInstruction;
 import model.Instruction;
 import model.UndoInstruction;
 
 public class PaintWindow extends JFrame {
 	// Panels
-	private Dimension WINDOW_SIZE = new Dimension(960, 540);
-	private Dimension TOOLBAR_SIZE = new Dimension(30, 540);
+	private Dimension WINDOW_SIZE = new Dimension(960, 640);
+	private Dimension TOOLBAR_SIZE = new Dimension(30, 640);
 	private static DoodlePanel paintPanel;
 	private MainWindow chatPanel;
 	private JPanel toolbar;
+	private JPanel centerWrapper;
 	private JColorChooser jcc;
 	private JDialog colorDialog;
 	private JFileChooser fileChooser;
+	private static CommentDisplayPane commentDisplay;
+	private CommentEntryPane commentEntry;
 	// Tool buttons
 	private JButton[] toolbarButtons = new JButton[10];
 	private JButton colorButton;
@@ -85,6 +91,7 @@ public class PaintWindow extends JFrame {
 	private int strokeSize = 5;
 	private int toolType = 0;
 	private int currentLayer = 0;
+	private int commentIndex = 0;
 	private Color currentColor = Color.RED;
 	// Button icons
 	private ImageIcon brush = new ImageIcon("PaintPanel/imagesource/ic_brush_black_24dp_1x.png");
@@ -110,6 +117,7 @@ public class PaintWindow extends JFrame {
 	private JLabel colorLabel = new JLabel(colorIcon);
 	// Listeners
 	private ColorPickerListener colorListener;
+	private CommentInstruction currentCommentInstruction;
 	
 	private PaintClient paintClient;
 	private static int clientId;
@@ -125,12 +133,19 @@ public class PaintWindow extends JFrame {
 		this.setLayout(new BorderLayout());
 		this.toolbar = new JPanel();
 		PaintWindow.paintPanel = new DoodlePanel(this);
+		this.commentDisplay = new CommentDisplayPane();
+		this.commentEntry = new CommentEntryPane(this);
+		this.centerWrapper = new JPanel();
+		this.centerWrapper.setLayout(new BoxLayout(this.centerWrapper, BoxLayout.Y_AXIS));
+		this.centerWrapper.add(PaintWindow.paintPanel);
+		this.centerWrapper.add(this.commentDisplay);
+		this.centerWrapper.add(this.commentEntry);
 		this.chatPanel = new MainWindow(ip, port + 1);
 		this.populateToolbar(); // Adds various buttons to toolbar
 		this.createColorChooser();
 		this.createFileChooser();
 		// Adding JPanels to JFrame
-		this.add(PaintWindow.paintPanel, BorderLayout.CENTER);
+		this.add(this.centerWrapper, BorderLayout.CENTER);
 		this.add(this.toolbar, BorderLayout.LINE_START);
 		this.add(this.chatPanel, BorderLayout.LINE_END);
 		// Fixing window dimensions
@@ -354,6 +369,36 @@ public class PaintWindow extends JFrame {
 		return this.clientId;
 	}
 	
+	public int getCommentIndex() {
+		return this.commentIndex;
+	}
+	
+	public String getCommentText() {
+		return this.commentEntry.getText();
+	}
+	
+	public void setCurrentCommentInstruction(CommentInstruction comment) {
+		this.currentCommentInstruction = comment;
+	}
+	
+	public void sendCommentInstruction() {
+		if (this.currentCommentInstruction == null) {
+			System.out.println("Please drag a circle to indicate where you are commenting on");
+		} else {
+			this.currentCommentInstruction.setCommentText(this.commentEntry.getText());
+			if (this.currentCommentInstruction.getCommentText().equals("")) {
+				System.out.println("Please enter your comment");
+			} else {
+				this.getDoodlePanel().clearPreviewLayer();
+				this.commentDisplay.addComment(this.currentCommentInstruction.getIndex(), this.currentCommentInstruction.getCommentText());
+				this.getDoodlePanel().executeInstruction(this.currentCommentInstruction);
+				this.sendInstruction(this.currentCommentInstruction);
+				this.currentCommentInstruction = null;
+			}
+		}
+		
+	}
+	
 	// I declare the PaintClient class here to provide easy access to the parent fields
 	class PaintClient extends Thread {
 		private Socket mySocket;
@@ -401,6 +446,10 @@ public class PaintWindow extends JFrame {
 						if (instr instanceof UndoInstruction) {
 							System.out.println("Received instruction: undo");
 							PaintWindow.paintPanel.undo();
+						} else if (instr instanceof CommentInstruction) {
+							CommentInstruction comment = (CommentInstruction) instr;
+							PaintWindow.commentDisplay.addComment(comment.getIndex(), comment.getCommentText());
+							PaintWindow.paintPanel.executeInstruction(comment);
 						} else {
 							System.out.println("Received instruction:");
 							PaintWindow.paintPanel.executeInstruction(instr);	

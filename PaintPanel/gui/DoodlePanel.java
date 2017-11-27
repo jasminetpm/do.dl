@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -23,6 +24,7 @@ public class DoodlePanel extends JPanel {
 	private ArrayList<BufferedImage> displayLayers;
 	private LinkedList<Instruction> instructionLog;
 	private BufferedImage previewLayer;
+	private Dimension WINDOW_SIZE = new Dimension(650, 540);
 	
 	public DoodlePanel(PaintWindow pw)
 	{
@@ -39,6 +41,7 @@ public class DoodlePanel extends JPanel {
 		this.instructionLog = new LinkedList<Instruction>();
 		this.previewLayer = new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB);
 		this.setBackground(Color.WHITE);
+		this.setPreferredSize(this.WINDOW_SIZE);
 		this.addMouseListener(pml);
 		this.addMouseMotionListener(pml);
 	}

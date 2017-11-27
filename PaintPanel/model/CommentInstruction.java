@@ -7,7 +7,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class CircleInstruction extends Instruction {
+public class CommentInstruction extends Instruction {
 	private Color color;
 	private int lineWidth;
 	private int layer;
@@ -15,9 +15,11 @@ public class CircleInstruction extends Instruction {
 	private int y1;
 	private int x2;
 	private int y2;
-
-	public CircleInstruction(Color _color, int _lineWidth, int _layer, int _x1, int _y1, int _x2, int _y2,
-			int _clientId) {
+	private int index;
+	private String comment;
+	
+	public CommentInstruction(Color _color, int _lineWidth, int _layer, int _x1, int _y1, int _x2, int _y2,
+			int _clientId, int _index, String _comment) {
 		this.color = _color;
 		this.lineWidth = _lineWidth;
 		this.layer = _layer;
@@ -25,7 +27,22 @@ public class CircleInstruction extends Instruction {
 		this.y1 = _y1;
 		this.x2 = _x2;
 		this.y2 = _y2;
+		this.index = _index;
+		this.comment = _comment;
+		
 		super.clientId = _clientId;
+	}
+	
+	public String getCommentText() {
+		return this.comment;
+	}
+	
+	public void setCommentText(String _comment) {
+		this.comment = _comment;
+	}
+	
+	public int getIndex() {
+		return this.index;
 	}
 
 	@Override
@@ -34,12 +51,14 @@ public class CircleInstruction extends Instruction {
 		Graphics2D g = img.createGraphics();
 
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setColor(this.color);
 		g.setStroke(new BasicStroke(this.lineWidth));
+		g.setColor(new Color(this.color.getRed(),this.color.getGreen(),this.color.getBlue(),100));
+		g.fillOval(Math.min(this.x1, this.x2), Math.min(this.y1, this.y2), Math.abs(this.x1 - this.x2),
+				Math.abs(this.y1 - this.y2));
 
+		g.setColor(new Color(this.color.getRed(),this.color.getGreen(),this.color.getBlue(),255));
 		g.drawOval(Math.min(this.x1, this.x2), Math.min(this.y1, this.y2), Math.abs(this.x1 - this.x2),
 				Math.abs(this.y1 - this.y2));
 		g.dispose();
-
 	}
 }
