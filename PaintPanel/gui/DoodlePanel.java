@@ -81,6 +81,7 @@ public class DoodlePanel extends JPanel {
 		// get the information from the state object
 		this.instructionLog = currentState.getLog();
 		this.baseLayers = currentState.getLayers();
+		this.myWindow.setComments(currentState.getComments());
 
 		// copy the base layers
 		for (BufferedImage img : this.baseLayers) {
@@ -95,7 +96,7 @@ public class DoodlePanel extends JPanel {
 		
 		// set display layers to new display layers, and redraw
 		this.displayLayers = _displayLayers;
-		this.repaint();
+		this.repaintComments();
 	}
 	
 	public void undo() {

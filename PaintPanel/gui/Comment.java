@@ -10,7 +10,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import listeners.DeleteCommentListener;
+import model.CommentInstruction;
+
 public class Comment extends JPanel {
+	private PaintWindow pw;
 	private int index;
 	private String comment;
 	private JPanel headerWrapper;
@@ -19,7 +23,8 @@ public class Comment extends JPanel {
 	private JTextArea commentDisplay;
 	private Dimension HEADER_SIZE = new Dimension(600, 20);
 	
-	public Comment(int _index, String _comment) {
+	public Comment(PaintWindow _pw, int _index, String _comment) {
+		this.pw = _pw;
 		this.index = _index;
 		this.comment = _comment;
 		
@@ -28,8 +33,9 @@ public class Comment extends JPanel {
 		// set up header
 		this.headerWrapper = new JPanel();
 		this.headerWrapper.setLayout(new BorderLayout());
-		this.header = new JLabel("Comment #" + index);
+		this.header = new JLabel("Comment #" + this.index);
 		this.close = new JButton("X");
+		this.close.addActionListener(new DeleteCommentListener(this.pw, this.index));
 		this.headerWrapper.add(this.header, BorderLayout.LINE_START);
 		this.headerWrapper.add(this.close, BorderLayout.LINE_END);
 		

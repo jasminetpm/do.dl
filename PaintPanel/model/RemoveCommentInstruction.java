@@ -4,14 +4,14 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class RemoveCommentInstruction extends Instruction {
-	private CommentInstruction comment;
+	private int index;
 	
-	public RemoveCommentInstruction(CommentInstruction _comment) {
-		this.comment = _comment;
+	public RemoveCommentInstruction(int _index) {
+		this.index = _index;
 	}
 	
-	public CommentInstruction getComment() {
-		return this.comment;
+	public int getIndex() {
+		return this.index;
 	}
 	
 	@Override

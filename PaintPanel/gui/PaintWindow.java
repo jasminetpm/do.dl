@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -54,6 +55,7 @@ import listeners.ToolSelectorListener;
 import model.CanvasState;
 import model.CommentInstruction;
 import model.Instruction;
+import model.RemoveCommentInstruction;
 import model.UndoInstruction;
 
 public class PaintWindow extends JFrame {
@@ -92,7 +94,7 @@ public class PaintWindow extends JFrame {
 	private int strokeSize = 5;
 	private int toolType = 0;
 	private int currentLayer = 0;
-	private int commentIndex = 0;
+	private static int commentIndex = 0;
 	private Color currentColor = Color.RED;
 	// Button icons
 	private ImageIcon brush = new ImageIcon("PaintPanel/imagesource/ic_brush_black_24dp_1x.png");
@@ -380,7 +382,25 @@ public class PaintWindow extends JFrame {
 	}
 	
 	public ArrayList<CommentInstruction> getCommentList() {
-		return this.comments;
+		return PaintWindow.comments;
+	}
+	
+	public void setComments(ArrayList<CommentInstruction> _comments) {
+		PaintWindow.comments = _comments;
+		this.commentDisplay.repopulateComments();
+	}
+	
+	public static void removeComment(int index) {
+		Iterator<CommentInstruction> it = PaintWindow.comments.iterator();
+		while (it.hasNext()) {
+		   CommentInstruction nextItem = it.next();
+		   if (nextItem.getIndex() == index) {
+		      it.remove();
+		   }
+		}
+		System.out.println(PaintWindow.comments);
+		PaintWindow.commentDisplay.repopulateComments();
+		PaintWindow.paintPanel.repaintComments();
 	}
 	
 	public void setCurrentCommentInstruction(CommentInstruction comment) {
@@ -395,8 +415,10 @@ public class PaintWindow extends JFrame {
 			if (this.currentCommentInstruction.getCommentText().equals("")) {
 				System.out.println("Please enter your comment");
 			} else {
+				this.commentIndex++;
 				this.getDoodlePanel().clearPreviewLayer();
-				PaintWindow.commentDisplay.addComment(this.currentCommentInstruction.getIndex(), this.currentCommentInstruction.getCommentText());
+				PaintWindow.comments.add(this.currentCommentInstruction);
+				PaintWindow.commentDisplay.repopulateComments();
 				this.getDoodlePanel().executeInstruction(this.currentCommentInstruction);
 				this.sendInstruction(this.currentCommentInstruction);
 				this.currentCommentInstruction = null;
@@ -457,11 +479,16 @@ public class PaintWindow extends JFrame {
 							System.out.println("Received instruction: undo");
 							PaintWindow.paintPanel.undo();
 						} else if (instr instanceof CommentInstruction) {
+							PaintWindow.commentIndex++;
 							CommentInstruction comment = (CommentInstruction) instr;
 							System.out.println("Received instruction: comment");
 							PaintWindow.comments.add(comment);
 							PaintWindow.commentDisplay.repopulateComments();
 							PaintWindow.paintPanel.executeInstruction(comment);
+						} else if (instr instanceof RemoveCommentInstruction) {
+							System.out.println("Received instruction: remove comment");
+							RemoveCommentInstruction rmComment = (RemoveCommentInstruction) instr;
+							PaintWindow.removeComment(rmComment.getIndex());
 						} else {
 							PaintWindow.paintPanel.executeInstruction(instr);	
 						}			
