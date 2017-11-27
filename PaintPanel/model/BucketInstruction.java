@@ -7,9 +7,12 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.awt.image.DataBufferInt;
-//import org.apache.commons.collections4.ListUtils;
 
-
+/**
+ * A class which represents a fill made by the bucket tool
+ * 
+ * @author Daniel Lok
+ */
 public class BucketInstruction extends Instruction {
 	private int oldColor;
 	private int newColor;
@@ -18,6 +21,20 @@ public class BucketInstruction extends Instruction {
 	private int layer;
 	private int[][] pixels = new int[540][650];
 	
+	/**
+	 * Class constructor.
+	 * 
+	 * @param x
+	 *            the x-coordinate of where the user clicked
+	 * @param y
+	 *            the y-coordinate of where the user clicked
+	 * @param _newColor
+	 *            the color of the fill
+	 * @param _layer
+	 *            the layer which the instruction was called on
+	 * @param _clientId
+	 *            the client's ID (provided by the server)
+	 */
 	public BucketInstruction(int x, int y, int _newColor,  int _layer, int _clientId) {
 		super.clientId = _clientId;
 		this.newColor = _newColor;
@@ -26,6 +43,16 @@ public class BucketInstruction extends Instruction {
 		this.layer = _layer;
 	}
 	
+	/**
+	 * Fills a bounded area with the BucketInstruction's newColor. Performs an
+	 * iterative breadth-first search on a 2D-array of colors, and recolors them
+	 * appropriately.
+	 * 
+	 * @param row
+	 *            the x-coordinate of where the user clicked
+	 * @param column
+	 *            the y-coordinate of where the user clicked
+	 */
 	private void traverse(int row, int column) {
 		LinkedList<Point> queue = new LinkedList<Point>();
 		Point currentPoint;
@@ -55,6 +82,12 @@ public class BucketInstruction extends Instruction {
 		return;
 	}
 	
+	/**
+	 * Performs the fill on the appropriate layer. This function converts the layer
+	 * into a 2D array of colors, and then calls traverse() on the array. A new
+	 * image is then created from this array.
+	 * @param layers the displayLayer field of the DoodlePanel
+	 */
 	@Override
 	public void execute(ArrayList<BufferedImage> layers) {
 		

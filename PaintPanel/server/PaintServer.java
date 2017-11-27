@@ -17,6 +17,13 @@ import model.Instruction;
 import model.RemoveCommentInstruction;
 import model.UndoInstruction;
 
+/**
+ * The server class. This class stores the current state of the canvas, and
+ * relays Instructions to its clients. Additionally, this class instantiates the
+ * chat server.
+ * 
+ * @author daniellok
+ */
 public class PaintServer {
 	private ServerSocket paintServSock;
 	private ServerSocket chatServSock;
@@ -28,6 +35,14 @@ public class PaintServer {
 	private static LinkedList<Instruction> instructionLog;
 	private static ArrayList<CommentInstruction> comments = new ArrayList<CommentInstruction>();
 	
+	/**
+	 * Class constructor. The port of the chat server will always be the port of the
+	 * paint server + 1.
+	 * 
+	 * @param port
+	 *            user-defined; this is the port which the clients will need to
+	 *            connect on.
+	 */
 	public PaintServer(int port) {
 		try {
 			this.paintServSock = new ServerSocket(port);
@@ -44,6 +59,10 @@ public class PaintServer {
 		}
 	}
 	
+	/**
+	 * Removes a comment from the comments list
+	 * @param index
+	 */
 	public static void removeComment(int index) {
 		Iterator<CommentInstruction> it = PaintServer.comments.iterator();
 		while (it.hasNext()) {
@@ -55,6 +74,15 @@ public class PaintServer {
 		System.out.println(PaintServer.comments);
 	}
 	
+	/**
+	 * Called when the server receives an Instruction from a client. It adds the
+	 * instruction to its local instruction log, and if the log grows too large (>
+	 * 20), then the first instruction is popped from the queue and used to modify
+	 * the base layers.
+	 * 
+	 * @param instr
+	 *            the Instruction received from a client.
+	 */
 	public static void executeInstruction(Instruction instr) {
 		Instruction poppedInstr;
 		
@@ -66,6 +94,10 @@ public class PaintServer {
 		}
 	}
 	
+	/**
+	 * Called when the server receives an undo instruction from a client. Removes
+	 * the last instruction from the instruction log.
+	 */
 	public static void undo() {
 		// only undo if there are instructions in the log
 		if (PaintServer.instructionLog.size() > 0) {
@@ -76,10 +108,19 @@ public class PaintServer {
 		}
 	}
 	
+	/**
+	 * Get the list of clients connected to the chat server.
+	 * 
+	 * @return the list of clients connected to the chat server
+	 */
 	public ArrayList<ChatServerClientThread> getChatClientList() {
 		return PaintServer.chatClientList;
 	}
 	
+	/**
+	 * A loop to accept clients. Once a client connects, they are added to the list
+	 * of clients.
+	 */
 	public void acceptClientLoop() {
 		while (true) {
 			Socket pss;
@@ -101,6 +142,14 @@ public class PaintServer {
 		}
 	}
 	
+	/**
+	 * Connection handler class for the paint clients. Continuously listens for
+	 * messages from its client, and relays them to the other clients connected to
+	 * the server. The connection handler for the chat client can be found in the
+	 * ChatServerClientThread class.
+	 * 
+	 * @author daniellok
+	 */
 	class ConnectionHandler extends Thread {
 		private Socket client;
 		public int id;
@@ -109,6 +158,14 @@ public class PaintServer {
 		private ObjectOutputStream oos;
 		private ObjectInputStream ois;
 		
+		/**
+		 * Class constructor.
+		 * 
+		 * @param c
+		 *            the socket on which the client connected
+		 * @param _id
+		 *            the client's ID (provided by the PaintServer class)
+		 */
 		public ConnectionHandler(Socket c, int _id) {
 			// TODO Auto-generated constructor stub
 			try {
@@ -125,6 +182,10 @@ public class PaintServer {
 			}
 		}
 		
+		/**
+		 * The listening loop. The ConnectionHandler will continuously read from its
+		 * client, and relay any messages which are passed.
+		 */
 		@Override
 		public void run() {
 			try {
@@ -174,6 +235,12 @@ public class PaintServer {
 			}
 		}
 		
+		/**
+		 * Sends an Instruction to the client
+		 * 
+		 * @param instr
+		 *            the instruction to be sent
+		 */
 		public void sendInstruction(Instruction instr) {
 			try {
 				System.out.println("Sending Message to Client");
@@ -186,6 +253,12 @@ public class PaintServer {
 			}
 		}
 		
+		/**
+		 * Sends the canvas state (the current picture) to the client. This function is
+		 * called in the class constructor (i.e. when the client connects to the server)
+		 * 
+		 * @throws IOException
+		 */
 		public void sendCanvasState() throws IOException {
 			System.out.println("Trying to send canvas state...");
 			CanvasState currentState = new CanvasState(PaintServer.baseLayers, PaintServer.instructionLog, PaintServer.comments, PaintServer.commentIndex);
@@ -196,6 +269,10 @@ public class PaintServer {
 			System.out.println("Done sending!");
 		}
 		
+		/**
+		 * Sends the clients its ID.
+		 * @param id the ID of the client, provided by the server
+		 */
 		public void sendId(Integer id) {
 			try {
 				System.out.println("Issuing client ID...");

@@ -59,6 +59,10 @@ import model.Instruction;
 import model.RemoveCommentInstruction;
 import model.UndoInstruction;
 
+/**
+ * The wrapper for the GUI
+ * @author daniellok
+ */
 public class PaintWindow extends JFrame {
 	// Panels
 	private Dimension WINDOW_SIZE = new Dimension(960, 640);
@@ -127,6 +131,14 @@ public class PaintWindow extends JFrame {
 	private PaintClient paintClient;
 	private static int clientId;
 	
+	/**
+	 * Constructor for PaintWindow
+	 * @param ip ip of paint server
+	 * @param port port of paint server
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public PaintWindow(String ip, int port) throws UnknownHostException, IOException, InterruptedException
 	{
 		// Creating connection to server
@@ -162,6 +174,9 @@ public class PaintWindow extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
+	/**
+	 * Adds buttons to the toolbar
+	 */
 	private void populateToolbar()
 	{
 		// Setting toolbar buttons
@@ -225,6 +240,9 @@ public class PaintWindow extends JFrame {
 		return new ImageIcon(resizedImage);
 	}
 	
+	/**
+	 * Creates the color chooser
+	 */
 	private void createColorChooser()
 	{
 		this.jcc = new JColorChooser();
@@ -250,6 +268,9 @@ public class PaintWindow extends JFrame {
 		this.colorDialog.setVisible(true);
 	}
 	
+	/**
+	 * Creates the file chooser
+	 */
 	private void createFileChooser()
 	{
 		FileFilter pngFilter = new FileNameExtensionFilter("PNG File", "png");
@@ -261,6 +282,9 @@ public class PaintWindow extends JFrame {
 		this.fileChooser.addChoosableFileFilter(jpgFilter);
 	}
 	
+	/**
+	 * Displays the window to save files
+	 */
 	public void viewFileChooser()
 	{
 		int returnVal = this.fileChooser.showSaveDialog(this);
@@ -300,32 +324,55 @@ public class PaintWindow extends JFrame {
 			
 		}
 	}
-	
+	/**
+	 * Getter for font size
+	 * @return the current font size
+	 */
 	public int getFontSize()
 	{
 		return this.fontSize;
 	}
 	
+	/**
+	 * Setter for font size
+	 * @param i the desired font size
+	 */
 	public void setFontSize(int i)
 	{
 		this.fontSize = i;
 	}
 	
+	/**
+	 * Getter for stroke size
+	 * @return the current stroke size
+	 */
 	public int getStrokeSize()
 	{
 		return this.strokeSize;
 	}
 	
+	/**
+	 * Setter for stroke size
+	 * @param i the desired stroke size
+	 */
 	public void setStrokeSize(int i)
 	{
 		this.strokeSize = i;
 	}
 	
+	/**
+	 * Getter for current color
+	 * @return the current color
+	 */
 	public Color getColor()
 	{
 		return this.currentColor;
 	}
 	
+	/**
+	 * Setter for current color
+	 * @param C the desired color
+	 */
 	public void setColor(Color C)
 	{
 		this.currentColor = C;
@@ -342,6 +389,10 @@ public class PaintWindow extends JFrame {
 		this.colorButton.setIcon(new ImageIcon(colorBox));
 	}
 	
+	/**
+	 * Sends an instruction to the client
+	 * @param instr the isntruction to be sent
+	 */
 	public void sendInstruction(Instruction instr) {
 		this.paintClient.sendInstruction(instr);
 	}
@@ -390,11 +441,19 @@ public class PaintWindow extends JFrame {
 		return PaintWindow.comments;
 	}
 	
+	/**
+	 * Sets new comment list and updates the display
+	 * @param _comments the new comment list
+	 */
 	public void setComments(ArrayList<CommentInstruction> _comments) {
 		PaintWindow.comments = _comments;
 		this.commentDisplay.repopulateComments();
 	}
 	
+	/**
+	 * Removes a comment from the comment list and updates the display
+	 * @param index the index of the comment to remove
+	 */
 	public static void removeComment(int index) {
 		Iterator<CommentInstruction> it = PaintWindow.comments.iterator();
 		while (it.hasNext()) {
@@ -412,6 +471,9 @@ public class PaintWindow extends JFrame {
 		this.currentCommentInstruction = comment;
 	}
 	
+	/**
+	 * Sends a comment instruction to the server, and updates the local comment list
+	 */
 	public void sendCommentInstruction() {
 		if (this.currentCommentInstruction == null) {
 			System.out.println("Please drag a circle to indicate where you are commenting on");
@@ -440,7 +502,11 @@ public class PaintWindow extends JFrame {
 		this.currentCommentInstruction = null;
 	}
 	
-	// I declare the PaintClient class here to provide easy access to the parent fields
+	/**
+	 * The class which is responsible for communicating with the server.
+	 * 
+	 * @author Daniel Lok
+	 */
 	class PaintClient extends Thread {
 		private Socket mySocket;
 		private OutputStream os;
@@ -448,6 +514,16 @@ public class PaintWindow extends JFrame {
 		private InputStream is;
 		private ObjectInputStream ois;
 
+		/**
+		 * Class constructor.
+		 * 
+		 * @param ip
+		 *            the IP address of the PaintServer
+		 * @param port
+		 *            the port of the PaintServer
+		 * @throws UnknownHostException
+		 * @throws IOException
+		 */
 		public PaintClient(String ip, int port) throws UnknownHostException, IOException 
 		{
 			this.mySocket = new Socket(ip, port);
@@ -456,6 +532,13 @@ public class PaintWindow extends JFrame {
 			this.is = this.mySocket.getInputStream();
 		}
 		
+		/**
+		 * Sends an Instruction to the server. This function is typically called when a
+		 * user has finished drawing a line/shape.
+		 * 
+		 * @param instr
+		 *            the Instruction to be sent
+		 */
 		public void sendInstruction(Instruction instr) 
 		{
 			try {
@@ -468,6 +551,11 @@ public class PaintWindow extends JFrame {
 			
 		}
 		
+		/**
+		 * Begins a reading loop. The PaintClient will constantly listen to messages
+		 * from the server, and will perform the appropriate actions (i.e. drawing on
+		 * the DoodlePanel, undoing the last action, updating the canvas state)
+		 */
 		@Override
 		public void run() 
 		{

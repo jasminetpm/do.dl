@@ -80,12 +80,23 @@ public class DoodlePanel extends JPanel {
 		return this.previewLayer;
 	}
 	
+	/**
+	 * Clears the preview layer. Called on mouseReleased when the user has selected
+	 * one of the shape tools.
+	 */
 	public void clearPreviewLayer() {
 		this.previewLayer = new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB);
 		this.repaint();
 	}
 	
-	// use this one for adding an instruction to the queue after real-time drawing
+	/**
+	 * Used to add an instruction to the DoodlePanel's local instructionLog. This
+	 * should be called together with PaintWindow's sendInstruction, since the
+	 * server will not relay an Instruction to the client which sent it.
+	 * 
+	 * @param instr
+	 *            the Instruction to be added to the log
+	 */
 	public void addInstruction(Instruction instr) {
 		Instruction poppedInstr;
 		
@@ -96,6 +107,15 @@ public class DoodlePanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * This function is called when a client connects to the server. Upon connect,
+	 * the server will send the client a CanvasState object which represents the
+	 * current picture. updateState() uses this object to set its local fields (i.e.
+	 * base layers, instruction log, and display layers).
+	 * 
+	 * @param currentState
+	 *            the CanvasState object received from the server
+	 */
 	public void updateState(CanvasState currentState) {
 		ArrayList<BufferedImage> _displayLayers = new ArrayList<BufferedImage>();
 		
@@ -121,6 +141,10 @@ public class DoodlePanel extends JPanel {
 		this.repaintComments();
 	}
 	
+	/**
+	 * Removes the last instruction from the instruction log, and reconstructs the
+	 * displayLayers.
+	 */
 	public void undo() {
 		ArrayList<BufferedImage> _displayLayers = new ArrayList<BufferedImage>();
 		BufferedImage test;
@@ -149,6 +173,14 @@ public class DoodlePanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * This function is called when the client receives an Instruction from the
+	 * server. It draws on the DoodlePanel's displayLayers, and adds the Instruction
+	 * to the DoodlePanel's instructionLog.
+	 * 
+	 * @param instr
+	 *            the Instruction received from the server
+	 */
 	public void executeInstruction(Instruction instr) {
 		Instruction poppedInstr;
 		
@@ -196,7 +228,17 @@ public class DoodlePanel extends JPanel {
 		return mergedImage;
 	}
 	
-	// taken from StackOverflow as a method to deep copy an image
+	/**
+	 * Taken from StackOverflow as method to deep copy an image. This was necessary
+	 * because the DoodlePanel's displayLayers need to be copies, not references, of
+	 * the baseLayers. If they were references, then drawing on the displayLayers
+	 * would also change the baseLayers, which would make it impossible to implement
+	 * the undo function.
+	 * 
+	 * @param bi
+	 *            the BufferedImage to be copied
+	 * @return a deep copy of the given BufferedImage.
+	 */
 	private BufferedImage deepCopy(BufferedImage bi) {
 		 ColorModel cm = bi.getColorModel();
 		 boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
@@ -204,6 +246,9 @@ public class DoodlePanel extends JPanel {
 		 return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 	
+	/**
+	 * This function repaints the comments according to the comment list in PaintWindow
+	 */
 	public void repaintComments() {
 		this.displayLayers.set(4, new BufferedImage(650, 540, BufferedImage.TYPE_INT_ARGB));
 		
@@ -214,6 +259,10 @@ public class DoodlePanel extends JPanel {
 		this.repaint();
 	}
 	
+	/**
+	 * This function draws all the display layers onto the DoodlePanel. Also draws
+	 * the preview layer on top of the currently selected layer.
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		for (int i=0; i < 5; i++) {
