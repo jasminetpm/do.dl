@@ -143,6 +143,7 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			BufferedImage commentLayer = this.myWindow.getDoodlePanel().getPreviewLayer();
 			Graphics2D commentGraph = commentLayer.createGraphics();
 			
+			
 			// clear it
 			commentGraph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			commentGraph.setComposite(AlphaComposite.Src);
@@ -150,8 +151,12 @@ public class PanelMouseListener implements MouseListener, MouseMotionListener {
 			commentGraph.setColor(new Color(0,0,0,0));
 			commentGraph.fillRect(0, 0, commentLayer.getWidth(), commentLayer.getHeight());
 			
+			
 			// draw the oval and repaint
-			commentGraph.setColor(this.myWindow.getColor());
+			commentGraph.setColor(Color.RED);
+			char[] charArray = new char[] {Integer.toString(this.myWindow.getCommentCount()).charAt(0)};
+			commentGraph.setFont(new Font("Monaco", Font.PLAIN, 20));
+			commentGraph.drawChars(charArray, 0, 1, Math.abs(this.x1-this.x2),  Math.abs(this.y1-this.y2));
 			commentGraph.drawOval(Math.min(this.x1,this.x2), Math.min(this.y1,this.y2), Math.abs(this.x1-this.x2), Math.abs(this.y1-this.y2));
 			this.myWindow.getDoodlePanel().repaint();
 			break;

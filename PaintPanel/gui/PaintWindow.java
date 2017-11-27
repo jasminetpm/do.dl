@@ -464,4 +464,9 @@ public class PaintWindow extends JFrame {
 	{
 		return this.commentCircleCount;
 	}
+	
+	public void setCommentCount(int count)
+	{
+		this.commentCount = count;
+	}
 }
